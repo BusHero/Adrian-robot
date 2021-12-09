@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="Background-Brush" Color="#f6f8fa"/>
+    <SolidColorBrush x:Key="Black-Color" Color="#392222"/>
+    <SolidColorBrush x:Key="Hyperlink-Color" Color="#a667f9"/>
+    <SolidColorBrush x:Key="Popup-Color" Color="#ffffff"/>
+    <SolidColorBrush x:Key="Selected-Color" Color="#ebf5ff"/>
+
+    <Style x:Key="Heading1" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="40"/>
+        <Setter Property="FontFamily" Value="Roboto"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+    <Style x:Key="Heading2" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontFamily" Value="Roboto" />
+        <Setter Property="Foreground" Value="{StaticResource Black-Color}"/>
+    </Style>
+    <Style x:Key="Heading3" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontFamily" Value="Roboto" />
+        <Setter Property="Foreground" Value="{StaticResource Black-Color}"/>
+    </Style>
+</ResourceDictionary>

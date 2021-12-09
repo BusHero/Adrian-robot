@@ -4,9 +4,91 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AdrianRobot"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Background="{StaticResource Background-Brush}"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
+    <Window.Resources>
+        <local:MockViewModel x:Key="MockData"/>
+        <Style x:Key="LeftNavbar" TargetType="Border">
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="{StaticResource Popup-Color}"/>
+            <Setter Property="Effect" >
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="3" Opacity=".2"  Direction="0" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="Settings-button" TargetType="ToggleButton">
+            <Setter Property="Background" Value="{StaticResource Popup-Color}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border CornerRadius="1" 
+                                Opacity="{TemplateBinding Opacity}" 
+                                BorderBrush="Black" 
+                                Background="{TemplateBinding Background}" 
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" Value="{StaticResource Selected-Color}"/>
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="3" Opacity=".2"  Direction="90" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsChecked" Value="False"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" Value="{StaticResource Background-Brush}"/>
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="3" Opacity=".2"  Direction="90" />
+                                    </Setter.Value>
+                                </Setter>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="232" />
+            <ColumnDefinition Width="5" />
+        </Grid.ColumnDefinitions>
+        <Border Style="{StaticResource LeftNavbar}" Grid.Column="0">
+            <DockPanel>
+                <ToggleButton Style="{StaticResource Settings-button}"
+                        Height="72" DockPanel.Dock="Bottom">
+                    <TextBlock Style="{StaticResource Heading3}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Text="Settings"
+                               ></TextBlock>
+                </ToggleButton>
+                <Border >
+                    <HeaderedContentControl Margin="16,64,0,0">
+                        <HeaderedContentControl.Header>
+                            <TextBlock Margin="0,0,0,0" Style="{StaticResource Heading2}" Text="Programs"></TextBlock>
+                        </HeaderedContentControl.Header>
+                        <DockPanel>
+                            <TextBlock Foreground="{StaticResource Hyperlink-Color}" 
+                                       Text="Add" 
+                                       DockPanel.Dock="Bottom" IsHyphenationEnabled="True" />
+                            <ListView ItemsSource="{Binding Path=Data, Source={x:Static local:MockViewModel.Instance}}"/>
+                        </DockPanel>
+                    </HeaderedContentControl>
+                </Border>
+            </DockPanel>
+        </Border>
     </Grid>
 </Window>
