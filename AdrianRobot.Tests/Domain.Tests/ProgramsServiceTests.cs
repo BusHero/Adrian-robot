@@ -2,8 +2,6 @@ using AdrianRobot.Domain;
 
 using FluentAssertions;
 
-using NSubstitute;
-
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
