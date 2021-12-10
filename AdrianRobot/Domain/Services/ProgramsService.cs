@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace AdrianRobot.Domain;
 
@@ -20,4 +22,9 @@ public class ProgramsService
 
     public Option<string> GetProgramName(ProgramId programId) => from program in ProgramsRepository.GetProgram(programId)
                                                                  select program.Name;
+
+    public ImmutableList<string> GetAllProgramNames() => ProgramsRepository
+        .GetAllProducts()
+        .Select(program => program.Name)
+        .ToImmutableList();
 }
