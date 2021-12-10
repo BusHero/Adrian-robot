@@ -1,16 +1,30 @@
-﻿using System;
+﻿using AdrianRobot.Domain;
+
+using Microsoft.Extensions.DependencyInjection;
+
 using System.Windows;
 
-namespace AdrianRobot
+namespace AdrianRobot;
+
+public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    protected override void OnStartup(StartupEventArgs e)
     {
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-        }
+        base.OnStartup(e);
+
+        var serviceProvider = new ServiceCollection()
+            .AddSingleton<IProgramsRepository>(_ => new InMemoryProgramsRepository("First", "Second", "Third"))
+            .AddSingleton<IProgramsService, ProgramsService>()
+            .AddSingleton<MainViewModel>()
+            .AddSingleton<Window>(services => new MainWindow
+            {
+                DataContext = services.GetRequiredService<MainViewModel>()
+            })
+            .BuildServiceProvider();
+
+        var mainViewModel = serviceProvider.GetRequiredService<MainViewModel>();
+
+        MainWindow = serviceProvider.GetRequiredService<Window>();
+        MainWindow.Show();
     }
 }

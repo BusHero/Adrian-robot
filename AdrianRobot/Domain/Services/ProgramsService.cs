@@ -13,11 +13,11 @@ public class ProgramsService : IProgramsService
 
     private IProgramsRepository ProgramsRepository { get; }
 
-    public ProgramId CreateProgram(string productName)
+    public Program CreateProgram(string productName)
     {
         var program = new Program(new ProgramId(), productName);
         ProgramsRepository.SaveProgram(program);
-        return program.Id;
+        return program;
     }
 
     public Option<string> GetProgramName(ProgramId programId) => from program in ProgramsRepository.GetProgram(programId)

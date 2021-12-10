@@ -19,10 +19,10 @@ public class ProgramsServiceTests
         const string programName = "Test program";
         var programsService = new ProgramsService(repository);
         
-        ProgramId id = programsService.CreateProgram(productName: programName);
-        id.Should().NotBeNull();
+        var program = programsService.CreateProgram(productName: programName);
+        program.Should().NotBeNull();
 
-        var name = programsService.GetProgramName(programId: id);
+        var name = programsService.GetProgramName(programId: program.Id);
         name.Should().Be(programName.ToOption());
     }
 

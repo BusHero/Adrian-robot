@@ -7,7 +7,6 @@
         mc:Ignorable="d" Background="{StaticResource Background-Brush}"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
-        <local:MainViewModel x:Key="MockUpData"/>
         <Style x:Key="LeftNavbar" TargetType="Border">
             <Setter Property="BorderThickness" Value="0,0,1,0"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -62,7 +61,7 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Grid d:DataContext="{StaticResource MockUpData}">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="232" />
             <ColumnDefinition  />
@@ -84,12 +83,18 @@
                             <TextBlock Foreground="{StaticResource Hyperlink-Color}" 
                                        Text="Add" 
                                        DockPanel.Dock="Bottom" IsHyphenationEnabled="True" />
-                            <ListView ItemsSource="{Binding Path=Data, Source={x:Static local:MockViewModel.Instance}}"/>
+                            <ListView ItemsSource="{Binding Path=Programs}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type local:ProgramViewModel}">
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
                         </DockPanel>
                     </HeaderedContentControl>
                 </Border>
             </DockPanel>
         </Border>
-        <ContentPresenter Grid.Column="1" Content="{Binding CurrentViewModel}"/>
+        <ContentPresenter Grid.Column="1" Content="{Binding Current}"/>
     </Grid>
 </Window>

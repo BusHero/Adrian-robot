@@ -4,7 +4,7 @@ namespace AdrianRobot.Domain
 {
     public interface IProgramsService
     {
-        ProgramId CreateProgram(string productName);
+        Program CreateProgram(string productName);
         ImmutableList<string> GetAllProgramNames();
 
         ImmutableList<Program> GetAllPrograms();

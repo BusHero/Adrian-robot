@@ -1,6 +1,5 @@
 ﻿using AdrianRobot.Domain;
 
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -8,6 +7,26 @@ namespace AdrianRobot;
 
 public class MainViewModel : ViewModelBase
 {
+    #region Fields
+
+    private ViewModelBase? selected;
+
+    #endregion
+
+    #region Properties
+
+    public ObservableCollection<ProgramViewModel> Programs { get; }
+
+    public ViewModelBase? Selected { get => selected; set => Set(ref selected, value); }
+
+    #endregion
+
+    #region Services
+
+    private IProgramsService ProgramsService { get; }
+
+    #endregion
+
     public MainViewModel(IProgramsService programsService)
     {
         ProgramsService = programsService;
@@ -18,9 +37,24 @@ public class MainViewModel : ViewModelBase
             _ => new ObservableCollection<ProgramViewModel>()
         };
 
-        if (Programs.Count > 0)
-            Programs[0].IsSelected = true;
+        if (Programs.Count == 0)
+            return;
+        
+        Programs[0].IsSelected = true;
     }
+
+    #region Public Methdods
+
+    public void CreateNewProgram()
+    {
+        var program = ProgramsService.CreateProgram("New Program");
+        var programViewModel = CreateProgramViewModel(program);
+        Programs.Add(programViewModel);
+    }
+
+    #endregion
+
+    #region Private Methods
 
     private ProgramViewModel CreateProgramViewModel(Program program)
     {
@@ -38,8 +72,10 @@ public class MainViewModel : ViewModelBase
 
         foreach (var bar in Programs.Where(foo => foo != program))
             bar.IsSelected = false;
+
+        Selected = new ProgramOverviewViewModel(program.Program);
     }
 
-    public ObservableCollection<ProgramViewModel> Programs { get; }
-    public IProgramsService ProgramsService { get; }
+    #endregion
+
 }
