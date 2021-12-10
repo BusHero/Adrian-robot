@@ -7,7 +7,17 @@
         mc:Ignorable="d" Background="{StaticResource Background-Brush}"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
-        <local:MockViewModel x:Key="MockData"/>
+        <DataTemplate DataType="{x:Type local:SettingsViewModel}">
+            <Border Background="Red">
+                
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:ProgramsViewModel}">
+            <Border Background="Black">
+                
+            </Border>
+        </DataTemplate>
+        <local:MainViewModel x:Key="MockUpData"/>
         <Style x:Key="LeftNavbar" TargetType="Border">
             <Setter Property="BorderThickness" Value="0,0,1,0"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -62,10 +72,10 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Grid >
+    <Grid d:DataContext="{StaticResource MockUpData}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="232" />
-            <ColumnDefinition Width="5" />
+            <ColumnDefinition  />
         </Grid.ColumnDefinitions>
         <Border Style="{StaticResource LeftNavbar}" Grid.Column="0">
             <DockPanel>
@@ -90,5 +100,6 @@
                 </Border>
             </DockPanel>
         </Border>
+        <ContentPresenter Grid.Column="1" Content="{Binding CurrentViewModel}"/>
     </Grid>
 </Window>

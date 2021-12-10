@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdrianRobot", "AdrianRobot.csproj", "{23D11370-60DA-4966-B0B9-C0BBE14EDE91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdrianRobot", "AdrianRobot.csproj", "{23D11370-60DA-4966-B0B9-C0BBE14EDE91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdrianRobot.Tests", "..\AdrianRobot.Tests\AdrianRobot.Tests.csproj", "{025F8014-FF93-4AA1-97A3-B750DA2074EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{23D11370-60DA-4966-B0B9-C0BBE14EDE91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23D11370-60DA-4966-B0B9-C0BBE14EDE91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23D11370-60DA-4966-B0B9-C0BBE14EDE91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{025F8014-FF93-4AA1-97A3-B750DA2074EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{025F8014-FF93-4AA1-97A3-B750DA2074EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{025F8014-FF93-4AA1-97A3-B750DA2074EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{025F8014-FF93-4AA1-97A3-B750DA2074EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
