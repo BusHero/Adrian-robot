@@ -17,20 +17,28 @@ public class MainViewModel : ViewModelBase
                     program => new ProgramViewModel(program))),
             _ => new ObservableCollection<ProgramViewModel>()
         };
+
+        if (Programs.Count > 0)
+            Programs[0].IsSelected = true;
     }
 
     public ObservableCollection<ProgramViewModel> Programs { get; }
     public IProgramsService ProgramsService { get; }
 }
 
-public class ProgramViewModel
+public class ProgramViewModel : ViewModelBase
 {
-    public ProgramViewModel(Program program)
+    private bool isSelected;
+
+    public ProgramViewModel(Program program, bool isSelected = false)
     {
         Program = program;
+        IsSelected = isSelected;
     }
 
     public Program Program { get; }
 
     public string Name => Program.Name;
+
+    public bool IsSelected { get => isSelected; set => Set(ref isSelected, value); }
 }

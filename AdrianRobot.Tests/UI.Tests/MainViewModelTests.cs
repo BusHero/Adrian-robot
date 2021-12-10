@@ -41,4 +41,20 @@ public class MainViewModelTests
             .Should()
             .BeEquivalentTo(programNames);
     }
+
+    [Fact]
+    public void FirstProgramShouldBeSelected()
+    {
+        var programNames = ImmutableList.Create("first", "second", "third");
+        var programs = programNames
+            .Select(program => new Program(new ProgramId(), program))
+            .ToImmutableList();
+
+        var programsService = Substitute.For<IProgramsService>();
+        programsService.GetAllPrograms().Returns(programs);
+
+        var mainViewModel = new MainViewModel(programsService);
+
+        mainViewModel.Programs[0].IsSelected.Should().Be(true);
+    }
 }
