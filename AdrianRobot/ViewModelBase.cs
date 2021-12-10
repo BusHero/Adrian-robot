@@ -61,9 +61,13 @@ public abstract class ViewModelBase : INotifyPropertyChanged
         string propertyName,
         Action eventHandler) => SubscribePropertyChanged(propertyName, (_, __) => eventHandler(), AlwaysTrue);
 
+
     public virtual ViewModelBase SubscribePropertyChanged(
         string propertyName,
         PropertyChangedEventHandler eventHandler) => SubscribePropertyChanged(propertyName, eventHandler, AlwaysTrue);
+    
+    
+
 
     public virtual ViewModelBase SubscribePropertyChanged(
         string propertyName,
@@ -98,9 +102,9 @@ public abstract class ViewModelBase : INotifyPropertyChanged
             list.Add((eventHandler, canChange));
         else
             HandlersDictionary[propertyName] = new List<(PropertyChangedEventHandler, CanNotifyPropertyChanged)>
-                {
-                    (eventHandler, canChange)
-                };
+            {
+                (eventHandler, canChange)
+            };
 
         return this;
     }
@@ -137,4 +141,27 @@ public abstract class ViewModelBase : INotifyPropertyChanged
     public static ViewModelBase Empty { get; } = new NoneViewModelBase();
 
     public static NamedViewModel<TItem> NewNamedViewModel<TItem>(string name, TItem item) => new(name, item);
+}
+
+public delegate void PropertyChangedEventHandler<T>(T? sender, PropertyChangedEventArgs e);
+
+
+public abstract class ViewModelBase<T> : ViewModelBase 
+    where T : ViewModelBase<T>
+{
+    public virtual T? SubscribePropertyChanged(
+        string propertyName,
+        Action<T> eventHandler) => SubscribePropertyChanged(propertyName, (sender, _) => { eventHandler(sender); });
+
+    public virtual T? SubscribePropertyChanged(
+        string propertyName,
+        PropertyChangedEventHandler<T> eventHandler)
+    {
+        var foo = base.SubscribePropertyChanged(propertyName, (sender, eventArgs) =>
+        {
+            if (sender is T t)
+                eventHandler(t, eventArgs);
+        });
+        return foo as T;
+    }
 }

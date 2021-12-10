@@ -57,4 +57,24 @@ public class MainViewModelTests
 
         mainViewModel.Programs[0].IsSelected.Should().Be(true);
     }
+
+    [Fact]
+    public void OnlyOneProgramIsSelected()
+    {
+        var programNames = ImmutableList.Create("first", "second", "third");
+        var programs = programNames
+            .Select(program => new Program(new ProgramId(), program))
+            .ToImmutableList();
+
+        var programsService = Substitute.For<IProgramsService>();
+        programsService.GetAllPrograms().Returns(programs);
+
+        var mainViewModel = new MainViewModel(programsService);
+        mainViewModel.Programs[1].IsSelected = true;
+
+        mainViewModel.Programs
+            .Select(program => program.IsSelected)
+            .Should()
+            .BeEquivalentTo(new[] { false, true, false });
+    }
 }

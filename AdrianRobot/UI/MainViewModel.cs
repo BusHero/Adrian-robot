@@ -1,5 +1,6 @@
 ﻿using AdrianRobot.Domain;
 
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -13,8 +14,7 @@ public class MainViewModel : ViewModelBase
         Programs = programsService.GetAllPrograms() switch
         {
             { Count: > 0 } programs => new ObservableCollection<ProgramViewModel>(
-                programs.Select(
-                    program => new ProgramViewModel(program))),
+                programs.Select(CreateProgramViewModel)),
             _ => new ObservableCollection<ProgramViewModel>()
         };
 
@@ -22,23 +22,24 @@ public class MainViewModel : ViewModelBase
             Programs[0].IsSelected = true;
     }
 
-    public ObservableCollection<ProgramViewModel> Programs { get; }
-    public IProgramsService ProgramsService { get; }
-}
-
-public class ProgramViewModel : ViewModelBase
-{
-    private bool isSelected;
-
-    public ProgramViewModel(Program program, bool isSelected = false)
+    private ProgramViewModel CreateProgramViewModel(Program program)
     {
-        Program = program;
-        IsSelected = isSelected;
+        var programViewModel = new ProgramViewModel(program);
+
+        programViewModel.SubscribePropertyChanged(nameof(programViewModel.IsSelected), UpdateSelectedProperties);
+
+        return programViewModel;
     }
 
-    public Program Program { get; }
+    private void UpdateSelectedProperties(ProgramViewModel program)
+    {
+        if (program.IsSelected == false)
+            return;
 
-    public string Name => Program.Name;
+        foreach (var bar in Programs.Where(foo => foo != program))
+            bar.IsSelected = false;
+    }
 
-    public bool IsSelected { get => isSelected; set => Set(ref isSelected, value); }
+    public ObservableCollection<ProgramViewModel> Programs { get; }
+    public IProgramsService ProgramsService { get; }
 }
