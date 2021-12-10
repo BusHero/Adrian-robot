@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AdrianRobot.Domain;
 
-public class ProgramsService
+public class ProgramsService : IProgramsService
 {
     public ProgramsService(IProgramsRepository programsRepository)
     {
@@ -24,7 +24,10 @@ public class ProgramsService
                                                                  select program.Name;
 
     public ImmutableList<string> GetAllProgramNames() => ProgramsRepository
-        .GetAllProducts()
+        .GetAllPrograms()
         .Select(program => program.Name)
         .ToImmutableList();
+
+    public ImmutableList<Program> GetAllPrograms() => ProgramsRepository
+        .GetAllPrograms();
 }

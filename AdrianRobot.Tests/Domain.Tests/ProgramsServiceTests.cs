@@ -56,7 +56,7 @@ public class InMemoryProgramsRepository : IProgramsRepository
 
     public void SaveProgram(Program program) => Programs[program.Id] = program;
 
-    public ImmutableList<Program> GetAllProducts() => Programs
+    public ImmutableList<Program> GetAllPrograms() => Programs
         .Values
         .ToImmutableList();
 }

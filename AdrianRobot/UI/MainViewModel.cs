@@ -1,31 +1,36 @@
-﻿namespace AdrianRobot;
+﻿using AdrianRobot.Domain;
+
+using System.Collections.ObjectModel;
+using System.Linq;
+
+namespace AdrianRobot;
 
 public class MainViewModel : ViewModelBase
 {
-    #region Private fields
-
-    private ViewModelBase current;
-
-    #endregion
-
-    public MainViewModel(SettingsViewModel settingsViewModel, ProgramsViewModel programsViewModel)
+    public MainViewModel(IProgramsService programsService)
     {
-        SettingsViewModel = settingsViewModel ?? throw new System.ArgumentNullException(nameof(settingsViewModel));
-        ProgramsViewModel = programsViewModel ?? throw new System.ArgumentNullException(nameof(programsViewModel));
-        CurrentViewModel = SettingsViewModel;
+        ProgramsService = programsService;
+        Programs = programsService.GetAllPrograms() switch
+        {
+            { Count: > 0 } programs => new ObservableCollection<ProgramViewModel>(
+                programs.Select(
+                    program => new ProgramViewModel(program))),
+            _ => new ObservableCollection<ProgramViewModel>()
+        };
     }
 
-    public ViewModelBase CurrentViewModel { get => current; set => Set(ref current, value); }
-    public SettingsViewModel SettingsViewModel { get; }
-    public ProgramsViewModel ProgramsViewModel { get; }
+    public ObservableCollection<ProgramViewModel> Programs { get; }
+    public IProgramsService ProgramsService { get; }
 }
 
-public class SettingsViewModel: ViewModelBase
+public class ProgramViewModel
 {
+    public ProgramViewModel(Program program)
+    {
+        Program = program;
+    }
 
-}
+    public Program Program { get; }
 
-public class ProgramsViewModel: ViewModelBase
-{
-
+    public string Name => Program.Name;
 }

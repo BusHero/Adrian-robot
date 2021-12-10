@@ -7,16 +7,6 @@
         mc:Ignorable="d" Background="{StaticResource Background-Brush}"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type local:SettingsViewModel}">
-            <Border Background="Red">
-                
-            </Border>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type local:ProgramsViewModel}">
-            <Border Background="Black">
-                
-            </Border>
-        </DataTemplate>
         <local:MainViewModel x:Key="MockUpData"/>
         <Style x:Key="LeftNavbar" TargetType="Border">
             <Setter Property="BorderThickness" Value="0,0,1,0"/>
