@@ -1,6 +1,6 @@
 ﻿namespace AdrianRobot.Domain;
 
-internal class Program
+public class Program
 {
     public Program(ProgramId id, string name)
     {
