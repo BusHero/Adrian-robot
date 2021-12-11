@@ -26,7 +26,7 @@ jobs:
     - name: Zip build directory
       uses: papeloto/action-zip@v1
       with:
-        files: ./build
+        files: .\AdrianRobot\bin
         recursive: false
         dest: build.zip
     - name: Upload a Build Artifact
