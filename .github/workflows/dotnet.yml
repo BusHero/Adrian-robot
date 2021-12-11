@@ -23,3 +23,15 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Zip build directory
+      uses: papeloto/action-zip@v1
+      with:
+        files: ./build
+        recursive: false
+        dest: build.zip
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.3.0
+      with:
+        name: build-artifact
+        path: ./build.zip
+        retention-days: 1
