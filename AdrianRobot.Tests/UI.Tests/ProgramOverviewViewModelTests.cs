@@ -25,4 +25,15 @@ public class ProgramOverviewViewModelTests
 
         sut.Repeats.Should().Be(repeats);
     }
+
+    [Fact]
+    public void ProgramOverviewCanUpdateRepeats()
+    {
+        var programName = "Program name";
+        var repeats = 30;
+        var program = new Program(new(), programName, repeats);
+        var sut = new ProgramOverviewViewModel(program);
+
+        sut.UpdateRepeats(29);
+    }
 }

@@ -16,4 +16,9 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
     public string Name => Program.Name;
 
     public int Repeats => Program.Repeats;
+
+    public void UpdateRepeats(int v)
+    {
+        throw new NotImplementedException();
+    }
 }
