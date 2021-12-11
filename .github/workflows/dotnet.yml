@@ -5,7 +5,9 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
 jobs:
   build:
 
@@ -23,15 +25,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: Zip build directory
-      uses: papeloto/action-zip@v1
-      with:
-        files: .\AdrianRobot\bin
-        recursive: false
-        dest: build.zip
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.0
       with:
         name: build-artifact
-        path: ./build.zip
+        path: AdrianRobot/bin
         retention-days: 1
