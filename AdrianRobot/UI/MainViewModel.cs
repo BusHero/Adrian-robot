@@ -2,6 +2,7 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace AdrianRobot;
 
@@ -10,6 +11,10 @@ public class MainViewModel : ViewModelBase
     #region Fields
 
     private ViewModelBase? selected;
+    private ProgramViewModel? selectedProgram;
+    private bool isSettingsSelected;
+
+    private SettingsViewModel settingsViewModel;
 
     #endregion
 
@@ -18,6 +23,12 @@ public class MainViewModel : ViewModelBase
     public ObservableCollection<ProgramViewModel> Programs { get; }
 
     public ViewModelBase? Selected { get => selected; set => Set(ref selected, value); }
+
+    public ProgramViewModel? SelectedProgram { get => selectedProgram; set => Set(ref selectedProgram, value); }
+
+    public ICommand AddProgramCommand { get; }
+
+    public bool IsSettingsSelected { get => isSettingsSelected; set => Set(ref isSettingsSelected, value); }
 
     #endregion
 
@@ -30,6 +41,7 @@ public class MainViewModel : ViewModelBase
     public MainViewModel(IProgramsService programsService)
     {
         ProgramsService = programsService;
+        settingsViewModel = new SettingsViewModel();
         Programs = programsService.GetAllPrograms() switch
         {
             { Count: > 0 } programs => new ObservableCollection<ProgramViewModel>(
@@ -39,8 +51,12 @@ public class MainViewModel : ViewModelBase
 
         if (Programs.Count == 0)
             return;
-        
+
         Programs[0].IsSelected = true;
+
+        SubscribePropertyChanged(nameof(SelectedProgram), SelectedProgramChanged);
+        SubscribePropertyChanged(nameof(IsSettingsSelected), SelectSettingsView);
+        AddProgramCommand = Commands.NewCommand(CreateNewProgram);
     }
 
     #region Public Methdods
@@ -70,12 +86,38 @@ public class MainViewModel : ViewModelBase
         if (program.IsSelected == false)
             return;
 
-        foreach (var bar in Programs.Where(foo => foo != program))
-            bar.IsSelected = false;
-
+        UnselectAllProgramsExcept(program);
         Selected = new ProgramOverviewViewModel(program.Program);
     }
 
+    private void SelectedProgramChanged()
+    {
+        if (SelectedProgram == null)
+            UnselectAllPrograms();
+        else
+            SelectedProgram.IsSelected = true;
+    }
+
+    private void SelectSettingsView()
+    {
+        if (IsSettingsSelected != true)
+            return;
+
+        UnselectAllPrograms();
+        Selected = settingsViewModel;
+    }
+
+    private void UnselectAllPrograms()
+    {
+        foreach (var program in Programs)
+            program.IsSelected = false;
+    }
+
+    private void UnselectAllProgramsExcept(ProgramViewModel except)
+    {
+        foreach (var program in Programs.Where(program => program != except))
+            program.IsSelected = false;
+    }
     #endregion
 
 }

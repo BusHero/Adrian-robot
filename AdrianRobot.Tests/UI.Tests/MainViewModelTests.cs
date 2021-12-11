@@ -4,6 +4,8 @@ using FluentAssertions;
 
 using NSubstitute;
 
+using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -16,44 +18,28 @@ public class MainViewModelTests
     [Fact]
     public void Programs_AtTheBeginning_AreEmpty()
     {
-        var programsService = Substitute.For<IProgramsService>();
-        programsService.GetAllPrograms().Returns((ImmutableList<Program>?)ImmutableList<Program>.Empty);
-
-        var mainViewModel = new MainViewModel(programsService);
+        var config = new Config(Array.Empty<string>());
+        var mainViewModel = new MainViewModel(config.ProgramsService);
         mainViewModel.Programs.Should().BeEmpty();
     }
 
     [Fact]
     public void ProgramsComesFromTheProgramsService()
     {
-        var programNames = ImmutableList.Create("first", "second", "third");
-        var programs = programNames
-            .Select(program => new Program(new ProgramId(), program))
-            .ToImmutableList();
-
-        var programsService = Substitute.For<IProgramsService>();
-        programsService.GetAllPrograms().Returns(programs);
-
-        var mainViewModel = new MainViewModel(programsService);
+        var config = new Config();
+        var mainViewModel = new MainViewModel(config.ProgramsService);
         
         mainViewModel.Programs
             .Select(program => program.Name)
             .Should()
-            .BeEquivalentTo(programNames);
+            .BeEquivalentTo(config.ProgramNames);
     }
 
     [Fact]
     public void FirstProgramShouldBeSelected()
     {
-        var programNames = ImmutableList.Create("first", "second", "third");
-        var programs = programNames
-            .Select(program => new Program(new ProgramId(), program))
-            .ToImmutableList();
-
-        var programsService = Substitute.For<IProgramsService>();
-        programsService.GetAllPrograms().Returns(programs);
-
-        var mainViewModel = new MainViewModel(programsService);
+        var config = new Config();
+        var mainViewModel = new MainViewModel(config.ProgramsService);
 
         mainViewModel.Programs[0].IsSelected.Should().Be(true);
         mainViewModel.Selected.Should()
@@ -63,15 +49,8 @@ public class MainViewModelTests
     [Fact]
     public void OnlyOneProgramIsSelected()
     {
-        var programNames = ImmutableList.Create("first", "second", "third");
-        var programs = programNames
-            .Select(program => new Program(new ProgramId(), program))
-            .ToImmutableList();
-
-        var programsService = Substitute.For<IProgramsService>();
-        programsService.GetAllPrograms().Returns(programs);
-
-        var mainViewModel = new MainViewModel(programsService);
+        var config = new Config();
+        var mainViewModel = new MainViewModel(config.ProgramsService);
         mainViewModel.Programs[1].IsSelected = true;
 
         mainViewModel.Programs
@@ -86,18 +65,10 @@ public class MainViewModelTests
     [Fact]
     public void CreateNewProgram()
     {
-        var programNames = ImmutableList.Create("first", "second", "third");
-        var foo = programNames.Select((name, i) => (i == 0, name));
+        var config = new Config();
+        var foo = config.ProgramNames.Select((name, i) => (i == 0, name));
 
-        var programs = programNames
-            .Select(program => new Program(new ProgramId(), program))
-            .ToImmutableList();
-
-        var programsService = Substitute.For<IProgramsService>();
-        programsService.GetAllPrograms().Returns(programs);
-        programsService.CreateProgram("New Program").Returns(new Program(new ProgramId(), "New Program"));
-
-        var mainViewModel = new MainViewModel(programsService);
+        var mainViewModel = new MainViewModel(config.ProgramsService);
 
         mainViewModel.CreateNewProgram();
 
@@ -107,4 +78,57 @@ public class MainViewModelTests
             .Should()
             .BeEquivalentTo(foo.Append((false, "New Program")));
     }
+
+    [Fact]
+    public void WhenSettingsToggleIsSetProgramsAreUnselected()
+    {
+        var config = new Config();
+
+        var mainViewModel = new MainViewModel(config.ProgramsService)
+        {
+            IsSettingsSelected = true
+        };
+
+        mainViewModel.IsSettingsSelected.Should().BeTrue();
+        mainViewModel.Programs.Select(program => program.IsSelected).Should().BeEquivalentTo(new[] { false, false, false });
+        mainViewModel.Selected.Should().BeOfType<SettingsViewModel>();
+    }
+
+    [Fact]
+    public void WhenProgramIsSelected_SettingsIsUnselected()
+    {
+        var config = new Config();
+
+        var mainViewModel = new MainViewModel(config.ProgramsService)
+        {
+            IsSettingsSelected = true
+        };
+
+        mainViewModel.Programs[0].IsSelected = true;
+
+        mainViewModel.IsSettingsSelected.Should().BeTrue();
+        mainViewModel.Programs.Select(program => program.IsSelected).Should().BeEquivalentTo(new[] { true, false, false });
+        mainViewModel.Selected.Should().BeOfType<ProgramOverviewViewModel>();
+    }
+}
+
+public class Config
+{
+    public Config(IEnumerable<string> programNames)
+    {
+        ProgramNames = programNames.ToImmutableList();
+        Programs = ProgramNames
+            .Select(program => new Program(new ProgramId(), program))
+            .ToImmutableList();
+
+        ProgramsService = Substitute.For<IProgramsService>();
+        ProgramsService.GetAllPrograms().Returns(Programs);
+        ProgramsService.CreateProgram("New Program").Returns(new Program(new ProgramId(), "New Program"));
+    }
+
+    public Config(): this(new[] { "first", "second", "third" }) { }
+
+    public ImmutableList<Program> Programs { get; }
+    public ImmutableList<string> ProgramNames { get; }
+    public IProgramsService ProgramsService { get; }
 }

@@ -17,6 +17,9 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <DataTemplate DataType="{x:Type local:ProgramOverviewViewModel}">
+            <TextBlock Text="{Binding Name}"></TextBlock>
+        </DataTemplate>
         <Style x:Key="Settings-button" TargetType="ToggleButton">
             <Setter Property="Background" Value="{StaticResource Popup-Color}"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -80,10 +83,11 @@
                             <TextBlock Margin="0,0,0,0" Style="{StaticResource Heading2}" Text="Programs"></TextBlock>
                         </HeaderedContentControl.Header>
                         <DockPanel>
-                            <TextBlock Foreground="{StaticResource Hyperlink-Color}" 
-                                       Text="Add" 
-                                       DockPanel.Dock="Bottom" IsHyphenationEnabled="True" />
-                            <ListView ItemsSource="{Binding Path=Programs}">
+                            <Button Foreground="{StaticResource Hyperlink-Color}" 
+                                    DockPanel.Dock="Bottom"
+                                    Command="{Binding AddProgramCommand}"
+                                    Content="Add"/>
+                            <ListView SelectedItem="{Binding SelectedProgram}" ItemsSource="{Binding Path=Programs}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate DataType="{x:Type local:ProgramViewModel}">
                                         <TextBlock Text="{Binding Name}"/>
@@ -95,6 +99,6 @@
                 </Border>
             </DockPanel>
         </Border>
-        <ContentPresenter Grid.Column="1" Content="{Binding Current}"/>
+        <ContentPresenter Grid.Column="1" Content="{Binding Selected}"/>
     </Grid>
 </Window>
