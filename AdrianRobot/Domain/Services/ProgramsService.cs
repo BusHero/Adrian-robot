@@ -15,7 +15,7 @@ public class ProgramsService : IProgramsService
 
     public Program CreateProgram(string productName)
     {
-        var program = new Program(new ProgramId(), productName);
+        var program = new Program(new ProgramId(), productName, 0);
         ProgramsRepository.SaveProgram(program);
         return program;
     }

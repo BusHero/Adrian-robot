@@ -9,7 +9,7 @@ public class InMemoryProgramsRepository : IProgramsRepository
     public InMemoryProgramsRepository() => Programs = new Dictionary<ProgramId, Program>();
 
     public InMemoryProgramsRepository(IEnumerable<string> programNames) => Programs = programNames
-        .Select(programName => new Program(new ProgramId(), programName))
+        .Select(programName => new Program(new ProgramId(), programName, 0))
         .ToDictionary(program => program.Id);
 
     public InMemoryProgramsRepository(params string[] programNames) : this(programNames.AsEnumerable()) { }

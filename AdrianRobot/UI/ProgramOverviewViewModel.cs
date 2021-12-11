@@ -14,4 +14,6 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
     public Program Program { get; }
 
     public string Name => Program.Name;
+
+    public int Repeats => Program.Repeats;
 }

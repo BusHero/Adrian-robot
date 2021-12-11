@@ -112,12 +112,12 @@ public class Config
     {
         ProgramNames = programNames.ToImmutableList();
         Programs = ProgramNames
-            .Select(program => new Program(new ProgramId(), program))
+            .Select(program => new Program(new ProgramId(), program, 0))
             .ToImmutableList();
 
         ProgramsService = Substitute.For<IProgramsService>();
         ProgramsService.GetAllPrograms().Returns(Programs);
-        ProgramsService.CreateProgram("New Program").Returns(new Program(new ProgramId(), "New Program"));
+        ProgramsService.CreateProgram("New Program").Returns(new Program(new ProgramId(), "New Program", 0));
     }
 
     public Config(): this(new[] { "first", "second", "third" }) { }
