@@ -41,6 +41,9 @@ public class MainViewModel : ViewModelBase
     public MainViewModel(IProgramsService programsService)
     {
         ProgramsService = programsService;
+
+        AddProgramCommand = Commands.NewCommand(CreateNewProgram);
+
         settingsViewModel = new SettingsViewModel();
         Programs = programsService.GetAllPrograms() switch
         {
@@ -56,7 +59,6 @@ public class MainViewModel : ViewModelBase
 
         SubscribePropertyChanged(nameof(SelectedProgram), SelectedProgramChanged);
         SubscribePropertyChanged(nameof(IsSettingsSelected), SelectSettingsView);
-        AddProgramCommand = Commands.NewCommand(CreateNewProgram);
     }
 
     #region Public Methdods
@@ -81,9 +83,9 @@ public class MainViewModel : ViewModelBase
         return programViewModel;
     }
 
-    private void UpdateSelectedProperties(ProgramViewModel program)
+    private void UpdateSelectedProperties(ProgramViewModel? program)
     {
-        if (program.IsSelected == false)
+        if (program is null || program.IsSelected == false)
             return;
 
         UnselectAllProgramsExcept(program);
@@ -119,5 +121,4 @@ public class MainViewModel : ViewModelBase
             program.IsSelected = false;
     }
     #endregion
-
 }

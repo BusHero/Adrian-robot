@@ -10,9 +10,14 @@ namespace AdrianRobot;
 public abstract class ViewModelBase : INotifyPropertyChanged
 {
     protected virtual void HandlePropertyChangedEvent(
-        object sender,
+        object? sender,
         PropertyChangedEventArgs e)
     {
+        ArgumentNullException.ThrowIfNull(e);
+
+        if (e.PropertyName is null)
+            return;
+
         if (false == HandlersDictionary.TryGetValue(e.PropertyName, out var list))
             return;
 
@@ -24,7 +29,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
 
     public ViewModelBase() => PropertyChanged += HandlePropertyChangedEvent;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     protected void FirePropertyChangedEvent(
         [CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -48,8 +53,10 @@ public abstract class ViewModelBase : INotifyPropertyChanged
             .FirstOrDefault(p => string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase));
         if (property?.PropertyType != typeof(T))
             return false;
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         if (EqualityComparer<T>.Default.Equals((T)property.GetValue(source), value))
             return false;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
         property.SetValue(source, value);
         FirePropertyChangedEvent(propertyName);
         return true;
@@ -134,7 +141,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
 
     private static readonly CanNotifyPropertyChanged AlwaysTrue = (_, __) => true;
 
-    public delegate bool CanNotifyPropertyChanged(object sender, PropertyChangedEventArgs e);
+    public delegate bool CanNotifyPropertyChanged(object? sender, PropertyChangedEventArgs e);
 
     public class NoneViewModelBase : ViewModelBase { }
 
@@ -151,7 +158,7 @@ public abstract class ViewModelBase<T> : ViewModelBase
 {
     public virtual T? SubscribePropertyChanged(
         string propertyName,
-        Action<T> eventHandler) => SubscribePropertyChanged(propertyName, (sender, _) => { eventHandler(sender); });
+        Action<T?> eventHandler) => SubscribePropertyChanged(propertyName, (sender, _) => { eventHandler(sender); });
 
     public virtual T? SubscribePropertyChanged(
         string propertyName,

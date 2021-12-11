@@ -71,11 +71,10 @@
         </Grid.ColumnDefinitions>
         <Border Style="{StaticResource LeftNavbar}" Grid.Column="0">
             <DockPanel>
-                <ToggleButton Style="{StaticResource Settings-button}"
+                <ToggleButton IsChecked="{Binding IsSettingsSelected}" Style="{StaticResource Settings-button}"
                         Height="72" DockPanel.Dock="Bottom">
                     <TextBlock Style="{StaticResource Heading3}" VerticalAlignment="Center" HorizontalAlignment="Center"
-                               Text="Settings"
-                               ></TextBlock>
+                               Text="Settings"/>
                 </ToggleButton>
                 <Border >
                     <HeaderedContentControl Margin="16,64,0,0">

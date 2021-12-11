@@ -1,15 +1,6 @@
 ﻿using AdrianRobot.Domain;
 
-using FluentAssertions;
-
-using NSubstitute;
-
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-
-using Xunit;
 
 namespace AdrianRobot.Tests;
 
@@ -19,7 +10,9 @@ public class MainViewModelTests
     public void Programs_AtTheBeginning_AreEmpty()
     {
         var config = new Config(Array.Empty<string>());
+
         var mainViewModel = new MainViewModel(config.ProgramsService);
+        
         mainViewModel.Programs.Should().BeEmpty();
     }
 
@@ -27,6 +20,7 @@ public class MainViewModelTests
     public void ProgramsComesFromTheProgramsService()
     {
         var config = new Config();
+
         var mainViewModel = new MainViewModel(config.ProgramsService);
         
         mainViewModel.Programs
@@ -39,6 +33,7 @@ public class MainViewModelTests
     public void FirstProgramShouldBeSelected()
     {
         var config = new Config();
+        
         var mainViewModel = new MainViewModel(config.ProgramsService);
 
         mainViewModel.Programs[0].IsSelected.Should().Be(true);
@@ -50,6 +45,7 @@ public class MainViewModelTests
     public void OnlyOneProgramIsSelected()
     {
         var config = new Config();
+
         var mainViewModel = new MainViewModel(config.ProgramsService);
         mainViewModel.Programs[1].IsSelected = true;
 
@@ -71,8 +67,6 @@ public class MainViewModelTests
         var mainViewModel = new MainViewModel(config.ProgramsService);
 
         mainViewModel.CreateNewProgram();
-
-        mainViewModel.Programs.Count.Should().Be(4);
 
         mainViewModel.Programs.Select(program => (program.IsSelected, program.Name))
             .Should()
