@@ -21,4 +21,5 @@ public interface IProgramsService
     void UpdatePointWait(ProgramId programId, ProgramPointId programPointId, int wait);
     void RemovePoint(ProgramId programId, ProgramPointId pointId);
     void AddPoint(ProgramId programId, PointId pointId, int wait, int shake);
+    void UpdatePointShake(ProgramId programId, ProgramPointId programPointId, int shake);
 }
