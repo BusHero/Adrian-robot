@@ -17,4 +17,5 @@ public interface IProgramsService
     Option<string> GetProgramName(ProgramId programId);
 
     void UpdateProgramName(ProgramId programId, string newProgramName);
+    void RemoveProgram(ProgramId id);
 }

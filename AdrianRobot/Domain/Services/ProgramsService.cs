@@ -41,6 +41,8 @@ public class ProgramsService : IProgramsService
             .Modify(program => program.Name = newProgramName);
         ProgramsRepository.SaveProgram(program);
     }
+
+    public void RemoveProgram(ProgramId id) => ProgramsRepository.RemoveProgram(id);
 }
 
 public static class ProgramRepositoryExtensions

@@ -79,4 +79,14 @@ public class TestProgramService : IProgramsService
     {
         throw new NotImplementedException();
     }
+
+    public void RemoveProgram(ProgramId id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void UpdateProgramName(ProgramId programId, string newProgramName)
+    {
+        throw new NotImplementedException();
+    }
 }

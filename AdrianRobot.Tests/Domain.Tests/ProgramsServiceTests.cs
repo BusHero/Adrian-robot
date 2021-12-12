@@ -27,6 +27,18 @@ public class ProgramsServiceTests
     }
 
     [Fact]
+    public void RemoveProgram()
+    {
+        var program = new Program(new(), "first", 0, Array.Empty<Point>());
+        var repository = new InMemoryProgramsRepository(program);
+        IProgramsService programsService = new ProgramsService(repository);
+
+        programsService.RemoveProgram(program.Id);
+
+        repository.GetAllPrograms().Should().BeEmpty();
+    }
+
+    [Fact]
     public void GetNames()
     {
         var programs = new[] { "first", "second" };
@@ -52,37 +64,4 @@ public class ProgramsServiceTests
             .Should()
             .Be("New Program Name".ToOption());
     }
-}
-
-public class InMemoryProgramsRepository : IProgramsRepository
-{
-    #region Constructors
-
-    public InMemoryProgramsRepository(IEnumerable<Program> programs) => Programs = programs.ToDictionary(program => program.Id);
-
-    public InMemoryProgramsRepository(params Program[] programs) : this(programs.AsEnumerable()) { }
-
-    public InMemoryProgramsRepository(IEnumerable<string> programNames) : this(programNames
-            .Select(programName => new Program(new (), programName, 0, Array.Empty<Point>()))) { }
-
-    public InMemoryProgramsRepository(params string[] programNames) : this(programNames.AsEnumerable()) { }
-
-    public InMemoryProgramsRepository() : this(Array.Empty<Program>()) { }
-    
-    #endregion
-
-
-    private Dictionary<ProgramId, Program> Programs { get; }
-
-    public Option<Program> GetProgram(ProgramId programId) => Programs.TryGetValue(programId, out var program) switch
-    {
-        true => program.ToOption(),
-        false => Option.None<Program>()
-    };
-
-    public void SaveProgram(Program program) => Programs[program.Id] = program;
-
-    public ImmutableList<Program> GetAllPrograms() => Programs
-        .Values
-        .ToImmutableList();
 }
