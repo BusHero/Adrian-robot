@@ -40,6 +40,16 @@ public static class Option
         _ => None<U>()
     };
 
+    public static Option<T> Modify<T>(this Option<T> option, Action<T> modifier)
+    {
+        if (option is Some<T> { Value: var value })
+        {
+            modifier(value);
+            return value.ToOption();
+        }
+        return option;
+    }
+
     public static Option<U> SelectMany<T, U>(this Option<T> option, Func<T, Option<U>> selector) => option switch
     {
         Some<T> { Value: var value } => selector(value).Select(x => x),

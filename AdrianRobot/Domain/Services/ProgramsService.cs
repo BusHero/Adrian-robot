@@ -33,4 +33,24 @@ public class ProgramsService : IProgramsService
 
     public Option<Program> GetProgram(ProgramId program) => ProgramsRepository
         .GetProgram(program);
+
+    public void UpdateProgramName(ProgramId programId, string newProgramName)
+    {
+        var program = ProgramsRepository
+            .GetProgram(programId)
+            .Modify(program => program.Name = newProgramName);
+        ProgramsRepository.SaveProgram(program);
+    }
+}
+
+public static class ProgramRepositoryExtensions
+{
+    public static void SaveProgram(this IProgramsRepository programsRepository, Option<Program> optionalProgram)
+    {
+        ArgumentNullException.ThrowIfNull(programsRepository);
+        ArgumentNullException.ThrowIfNull(optionalProgram);
+
+        if (optionalProgram is Some<Program> someProgram)
+            programsRepository.SaveProgram(someProgram.Value);
+    }
 }

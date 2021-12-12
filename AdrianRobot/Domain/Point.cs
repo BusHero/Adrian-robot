@@ -4,8 +4,8 @@ public class Point
 {
     public Point(PointId id, string name, int motorYPosition, int motorZPosition)
     {
-        Id = id ?? throw new System.ArgumentNullException(nameof(id));
-        Name = name ?? throw new System.ArgumentNullException(nameof(name));
+        Id = id ?? throw new ArgumentNullException(nameof(id));
+        Name = name ?? throw new ArgumentNullException(nameof(name));
         MotorYPosition = motorYPosition;
         MotorZPosition = motorZPosition;
     }
@@ -17,6 +17,4 @@ public class Point
     public int MotorYPosition { get; }
 
     public int MotorZPosition { get; }
-
-
 }

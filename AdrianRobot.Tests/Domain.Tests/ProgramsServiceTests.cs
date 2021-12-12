@@ -36,15 +36,41 @@ public class ProgramsServiceTests
         ImmutableList<string> actualPrograms = programsService.GetAllProgramNames();
         actualPrograms.Should().BeEquivalentTo(programs);
     }
+
+    [Fact]
+    public void UpdateName()
+    {
+        var program = new Program(new(), "first", 0, Array.Empty<Point>());
+        var repository = new InMemoryProgramsRepository(program);
+        var programsService = new ProgramsService(repository);
+
+        programsService.UpdateProgramName(program.Id, "New Program Name");
+
+        repository
+            .GetProgram(program.Id)
+            .Select(program => program.Name)
+            .Should()
+            .Be("New Program Name".ToOption());
+    }
 }
 
 public class InMemoryProgramsRepository : IProgramsRepository
 {
-    public InMemoryProgramsRepository() => Programs = new Dictionary<ProgramId, Program>();
+    #region Constructors
 
-    public InMemoryProgramsRepository(IEnumerable<string> programNames) => Programs = programNames
-        .Select(programName => new Program(new ProgramId(), programName, 0, Array.Empty<Point>()))
-        .ToDictionary(program => program.Id);
+    public InMemoryProgramsRepository(IEnumerable<Program> programs) => Programs = programs.ToDictionary(program => program.Id);
+
+    public InMemoryProgramsRepository(params Program[] programs) : this(programs.AsEnumerable()) { }
+
+    public InMemoryProgramsRepository(IEnumerable<string> programNames) : this(programNames
+            .Select(programName => new Program(new (), programName, 0, Array.Empty<Point>()))) { }
+
+    public InMemoryProgramsRepository(params string[] programNames) : this(programNames.AsEnumerable()) { }
+
+    public InMemoryProgramsRepository() : this(Array.Empty<Program>()) { }
+    
+    #endregion
+
 
     private Dictionary<ProgramId, Program> Programs { get; }
 

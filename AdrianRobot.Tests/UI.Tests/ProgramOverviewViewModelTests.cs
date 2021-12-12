@@ -32,13 +32,24 @@ public class ProgramOverviewViewModelTests
     public void ProgramOverviewShowsPoints()
     {
         var program = new Program(
-            new(), 
-            "Program name", 
-            30, 
-            new[] { new Point(new PointId(), "Point", 100, 100) });
+            new(),
+            "Program name",
+            30,
+            new Point[] 
+            { 
+                new (new PointId(), "Point 1", 100, 100), 
+                new (new PointId(), "Point", 100, 100)
+            });
         var sut = new ProgramOverviewViewModel(program);
-        
-        sut.Points.Count.Should().Be(1);
+
+        sut.Points
+            .Select(point => point.Name)
+            .Should()
+            .BeEquivalentTo(new[] 
+            { 
+                "Point 1 (y: 100, z: 100)", 
+                "Point (y: 100, z: 100)" 
+            });
     }
 }
 
