@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Collections.Immutable;
 
 namespace AdrianRobot.Domain;
 
@@ -64,18 +62,24 @@ public class ProgramsService : IProgramsService
         
         ProgramsRepository.SaveProgram(programWithPoint);
     }
-    
-    #endregion
-}
 
-public static class ProgramRepositoryExtensions
-{
-    public static void SaveProgram(this IProgramsRepository programsRepository, Option<Program> optionalProgram)
+    public void RemovePoint(ProgramId programId, ProgramPointId pointId)
     {
-        ArgumentNullException.ThrowIfNull(programsRepository);
-        ArgumentNullException.ThrowIfNull(optionalProgram);
-
-        if (optionalProgram is Some<Program> someProgram)
-            programsRepository.SaveProgram(someProgram.Value);
+        var program = ProgramsRepository.GetProgram(programId);
+        
+        program.Modify(program => program.RemovePoint(pointId));
+        
+        ProgramsRepository.SaveProgram(program);
     }
+
+    public void UpdatePointWait(ProgramId programId, ProgramPointId programPointId, int wait)
+    {
+        var program = ProgramsRepository.GetProgram(programId);
+
+        program.Modify(program => program.UpdatePointWait(programPointId, wait));
+
+        ProgramsRepository.SaveProgram(program);
+    }
+
+    #endregion
 }

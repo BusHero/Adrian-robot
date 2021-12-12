@@ -69,18 +69,52 @@ public class ProgramsServiceTests
     public void AddPoint()
     {
         var pointsService = new PointsService(new InMemoryPointRepository());
-
         var point = pointsService.CreatePoint();
-
         var program = new Program(new(), "first", 0, Array.Empty<Point>());
-        var repository = new InMemoryProgramsRepository(program);
-        var programsService = new ProgramsService(repository, pointsService);
+        var programsRepository = new InMemoryProgramsRepository(program);
+        var programsService = new ProgramsService(programsRepository, pointsService);
 
         programsService.AddPoint(program.Id, point.Id, wait: 0, shake: 0);
 
-        repository.GetProgram(program.Id)
+        programsRepository.GetProgram(program.Id)
             .Select(program => program.Points[0].Id)
             .Should()
             .Be(point.Id.ToOption());
+    }
+
+    [Fact]
+    public void RemovePoint()
+    {
+        var point = new Point(new(), "point", 10, 10);
+        var pointsService = new PointsService(new InMemoryPointRepository(point));
+        var program = new Program(new(), "first", 0, new[] { point });
+        var programPointId = program.Points[0].Id;
+        var programsRepository = new InMemoryProgramsRepository(program);
+        var programsService = new ProgramsService(programsRepository, pointsService);
+
+        programsService.RemovePoint(program.Id, programPointId);
+
+        programsRepository.GetProgram(program.Id)
+            .Select(program => program.Points.Count)
+            .Should()
+            .Be(0.ToOption());
+    }
+
+    [Fact]
+    public void UpdatePointWait()
+    {
+        var point = new Point(new(), "point", 10, 10);
+        var pointsService = new PointsService(new InMemoryPointRepository(point));
+        var program = new Program(new(), "first", 0, new[] { point });
+        var programPointId = program.Points[0].Id;
+        var programsRepository = new InMemoryProgramsRepository(program);
+        var programsService = new ProgramsService(programsRepository, pointsService);
+
+        programsService.UpdatePointWait(program.Id, programPointId, 30);
+
+        programsRepository.GetProgram(program.Id)
+            .Select(program => program.Points[0].Wait)
+            .Should()
+            .Be(30.ToOption());
     }
 }

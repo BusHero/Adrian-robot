@@ -18,4 +18,7 @@ public interface IProgramsService
 
     void UpdateProgramName(ProgramId programId, string newProgramName);
     void RemoveProgram(ProgramId id);
+    void UpdatePointWait(ProgramId programId, ProgramPointId programPointId, int wait);
+    void RemovePoint(ProgramId programId, ProgramPointId pointId);
+    void AddPoint(ProgramId programId, PointId pointId, int wait, int shake);
 }
