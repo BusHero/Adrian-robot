@@ -6,12 +6,20 @@ namespace AdrianRobot.Domain;
 
 public class ProgramsService : IProgramsService
 {
-    public ProgramsService(IProgramsRepository programsRepository)
-    {
-        ProgramsRepository = programsRepository ?? throw new ArgumentNullException(nameof(programsRepository));
-    }
+    #region Private Services
 
     private IProgramsRepository ProgramsRepository { get; }
+    private IPointsService PointsService { get; }
+
+    #endregion
+    
+    public ProgramsService(IProgramsRepository programsRepository, IPointsService pointsService)
+    {
+        ProgramsRepository = programsRepository ?? throw new ArgumentNullException(nameof(programsRepository));
+        PointsService = pointsService ?? throw new ArgumentNullException(nameof(pointsService));
+    }
+
+    #region Public Methods
 
     public Program CreateProgram(string productName)
     {
@@ -43,6 +51,21 @@ public class ProgramsService : IProgramsService
     }
 
     public void RemoveProgram(ProgramId id) => ProgramsRepository.RemoveProgram(id);
+
+    public void AddPoint(ProgramId programId, PointId pointId, int wait, int shake)
+    {
+        var program = ProgramsRepository
+            .GetProgram(programId);
+        var point = PointsService.GetPoint(pointId);
+        
+        var programWithPoint = program
+            .Map2(point, (program, point) => program.AddPoint(point, wait, shake))
+            .Select(tuple => tuple.Item1);
+        
+        ProgramsRepository.SaveProgram(programWithPoint);
+    }
+    
+    #endregion
 }
 
 public static class ProgramRepositoryExtensions

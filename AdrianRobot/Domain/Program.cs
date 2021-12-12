@@ -22,13 +22,10 @@ public class Program
     public ProgramId Id { get; }
     public string Name { get; set; }
     public int Repeats { get; }
-    public ImmutableList<ProgramPoint> Points { get; }
-}
-
-public record ProgramPoint(
-    PointId Id, string Name, int MotorYPosition, int MotorZPosition, int Wait = 0, int Shake = 0)
-{
-    public ProgramPoint(Point point) : this(point.Id, point.Name, point.MotorYPosition, point.MotorZPosition, 0, 0) { }
-
-    public static ProgramPoint FromPoint(Point point) => new(point);
+    public ImmutableList<ProgramPoint> Points { get; private set; }
+    
+    public void AddPoint(Point point, int wait, int shake)
+    {
+        Points = Points.Add(new ProgramPoint(point) with { Wait = wait, Shake = shake });
+    }
 }

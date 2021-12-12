@@ -1,6 +1,4 @@
-﻿using AdrianRobot.Domain;
-
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 
 namespace AdrianRobot.Tests;
 
@@ -28,13 +26,17 @@ public class PointServiceTests
         var repository = new InMemoryPointRepository();
         var pointService = new PointsService(repository);
 
-        pointService.CreatePoint();
-        
+        CheckPoint(pointService.CreatePoint(), "Point", 0, 0);
+
         pointService.GetPoints().Count.Should().Be(1);
-        var point = pointService.GetPoints()[0];
-        point.Name.Should().Be("Point");
-        point.MotorYPosition.Should().Be(0);
-        point.MotorZPosition.Should().Be(0);
+        CheckPoint(pointService.GetPoints()[0], "Point", 0, 0);
+    }
+
+    private static void CheckPoint(Point point, string name, int motorYPosition, int motorZPosition)
+    {
+        point.Name.Should().Be(name);
+        point.MotorYPosition.Should().Be(motorYPosition);
+        point.MotorZPosition.Should().Be(motorZPosition);
     }
 }
 

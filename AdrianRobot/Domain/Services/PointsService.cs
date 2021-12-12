@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 
 namespace AdrianRobot;
 
-public class PointsService
+public class PointsService : IPointsService
 {
     private IPointsRepository PointsRepository { get; }
 
@@ -14,9 +14,12 @@ public class PointsService
 
     public ImmutableList<Point> GetPoints() => PointsRepository.GetAllPoints();
 
-    public void CreatePoint()
+    public Point CreatePoint()
     {
         var point = new Point(new PointId(), "Point", 0, 0);
         PointsRepository.SavePoint(point);
+        return point;
     }
+
+    public Option<Point> GetPoint(PointId pointId) => PointsRepository.GetPoint(pointId);
 }

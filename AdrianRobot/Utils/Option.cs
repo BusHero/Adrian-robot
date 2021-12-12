@@ -71,6 +71,18 @@ public static class Option
         _ => None<V>()
     };
 
+    public static Option<(T, U)> Map2<T, U>(this Option<T> first, Option<U> second, Action<T, U> action) => (first, second, action) switch
+    {
+        (null, _, _) => throw new ArgumentNullException(nameof(first)),
+        (_, null, _) => throw new ArgumentNullException(nameof(second)),
+        (_, _, null) => throw new ArgumentNullException(nameof(action)),
+        _ => first.Map2(second, (first, second) => 
+        {
+            action(first, second);
+            return (first, second);
+        })
+    };
+
     public static Option<T> Combine<T>(this Option<T> first, Option<T> second, Func<T, T, T> map) => (first, second, map) switch
     {
         (null, _, _) => throw new ArgumentNullException(nameof(first)),
