@@ -13,4 +13,10 @@ public class PointsService
     }
 
     public ImmutableList<Point> GetPoints() => PointsRepository.GetAllPoints();
+
+    public void CreatePoint()
+    {
+        var point = new Point(new PointId(), "Point", 0, 0);
+        PointsRepository.SavePoint(point);
+    }
 }

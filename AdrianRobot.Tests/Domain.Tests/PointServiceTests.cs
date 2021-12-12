@@ -9,18 +9,38 @@ public class PointServiceTests
     [Fact]
     public void GetPoints()
     {
-        var repository = new InMemoryPointRepository(new Point(new PointId()));
+        const string pointName = "point";
+        const int MotorYPosition = 0;
+        const int MotorZPosition = 0;
+        var point = new Point(new PointId(), pointName, MotorYPosition, MotorZPosition);
+        var repository = new InMemoryPointRepository(point);
         var pointService = new PointsService(repository);
 
         ImmutableList<Point> points = pointService.GetPoints();
 
         points.Count.Should().Be(1);
+        points[0].Should().Be(point);
+    }
+
+    [Fact]
+    public void CreatePoint()
+    {
+        var repository = new InMemoryPointRepository();
+        var pointService = new PointsService(repository);
+
+        pointService.CreatePoint();
+        
+        pointService.GetPoints().Count.Should().Be(1);
+        var point = pointService.GetPoints()[0];
+        point.Name.Should().Be("Point");
+        point.MotorYPosition.Should().Be(0);
+        point.MotorZPosition.Should().Be(0);
     }
 }
 
 public class InMemoryPointRepository : IPointsRepository
 {
-    private Dictionary<PointId, Point> points;
+    private readonly Dictionary<PointId, Point> points;
 
     public InMemoryPointRepository(IEnumerable<Point> points) => this.points = points
         .ToDictionary(point => point.Id);
