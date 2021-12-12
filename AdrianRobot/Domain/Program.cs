@@ -6,6 +6,8 @@ namespace AdrianRobot.Domain;
 
 public class Program
 {
+    public static Program Default { get; } = new Program(new(new Guid()), "", 0, Array.Empty<Point>());
+
     private readonly Dictionary<ProgramPointId, ProgramPoint> points;
 
     public Program(ProgramId id, string name, int repeats, IEnumerable<Point> points)
@@ -50,3 +52,4 @@ public class Program
         points[programPointId] = point with { Shake = shake };
     }
 }
+

@@ -7,9 +7,15 @@ namespace AdrianRobot;
 
 public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
 {
+    #region Private Services
+    
+    private IProgramsService ProgramsService { get; }
+
+    #endregion
+
     #region Properties
 
-    public Program Program { get; }
+    public Program Program { get; private set; }
 
     public ObservableCollection<PointViewModel> Points { get; }
     
@@ -19,10 +25,10 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
 
     #endregion
 
-    public ProgramOverviewViewModel(Program program)
+    public ProgramOverviewViewModel(Program program, IProgramsService programsService)
     {
         Program = program ?? throw new ArgumentNullException(nameof(program));
-
+        ProgramsService = programsService ?? throw new ArgumentNullException(nameof(programsService));
         Points = program
             .Points
             .Select(point => new PointViewModel(point))
@@ -35,6 +41,12 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
     {
         throw new NotImplementedException();
     }
-    
+
+    public void UpdateName(string newProgramName)
+    {
+        ProgramsService.UpdateProgramName(Program.Id, newProgramName);
+        Program = ProgramsService.GetProgram(Program.Id).ValueOrDefault(Program.Default);
+    }
+
     #endregion
 }

@@ -89,7 +89,7 @@ public class MainViewModel : ViewModelBase
             return;
 
         UnselectAllProgramsExcept(program);
-        Selected = new ProgramOverviewViewModel(program.Program);
+        Selected = new ProgramOverviewViewModel(program.Program, ProgramsService);
     }
 
     private void SelectedProgramChanged()

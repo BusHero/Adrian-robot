@@ -100,7 +100,7 @@ public static class Option
 
     public static Func<Option<T>, Option<T>, Option<T>> Binary<T>(Func<T, T, T> map) => Map2(map);
 
-    public static T? ValueOrDefault<T>(this Option<T> option, T @default) => option switch
+    public static T ValueOrDefault<T>(this Option<T> option, T @default) => option switch
     {
         null => throw new ArgumentNullException(nameof(option)),
         Some<T> { Value: var value } => value,
