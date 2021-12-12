@@ -25,7 +25,7 @@ public class Program
 
     public ProgramId Id { get; }
     public string Name { get; set; }
-    public int Repeats { get; }
+    public int Repeats { get; set; }
     public ImmutableList<ProgramPoint> Points => points.Values.ToImmutableList();
 
     public void AddPoint(Point point, int wait, int shake)

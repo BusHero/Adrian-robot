@@ -13,6 +13,22 @@ namespace AdrianRobot.Tests;
 public class ProgramsServiceTests
 {
     [Fact]
+    public void UpdateProgramRepeats()
+    {
+        var repeats = 30;
+        var program = new Program(new(), "first", 0, Array.Empty<Point>());
+        var programsRepository = new InMemoryProgramsRepository(program);
+        var programsService = new ProgramsService(programsRepository, Substitute.For<IPointsService>());
+
+        programsService.UpdateProgramRepeats(program.Id, repeats);
+
+        programsRepository.GetProgram(program.Id)
+            .Select(program => program.Repeats)
+            .Should()
+            .Be(repeats.ToOption());
+    }
+
+    [Fact]
     public void GetNames()
     {
         var programs = new[] { "first", "second" };

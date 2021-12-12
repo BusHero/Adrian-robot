@@ -22,4 +22,5 @@ public interface IProgramsService
     void RemovePoint(ProgramId programId, ProgramPointId pointId);
     void AddPoint(ProgramId programId, PointId pointId, int wait, int shake);
     void UpdatePointShake(ProgramId programId, ProgramPointId programPointId, int shake);
+    void UpdateProgramRepeats(ProgramId id, int repeats);
 }

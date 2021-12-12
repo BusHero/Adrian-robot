@@ -17,6 +17,7 @@ public class ProgramsService : IProgramsService
         PointsService = pointsService ?? throw new ArgumentNullException(nameof(pointsService));
     }
 
+
     #region Public Methods
 
     public Program CreateProgram(string productName)
@@ -86,6 +87,15 @@ public class ProgramsService : IProgramsService
         var program = ProgramsRepository.GetProgram(programId);
 
         program.Modify(program => program.UpdatePointShake(programPointId, shake));
+
+        ProgramsRepository.SaveProgram(program);
+    }
+
+    public void UpdateProgramRepeats(ProgramId programId, int repeats)
+    {
+        var program = ProgramsRepository.GetProgram(programId);
+
+        program.Modify(program => program.Repeats = repeats);
 
         ProgramsRepository.SaveProgram(program);
     }

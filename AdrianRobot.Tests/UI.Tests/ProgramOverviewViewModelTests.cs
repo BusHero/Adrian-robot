@@ -76,64 +76,32 @@ public class ProgramOverviewViewModelTests
         sut.Name.Should().Be(newProgramName);
         sut.Program.Name.Should().Be(newProgramName);
         programsService.Received().UpdateProgramName(program.Id, "New Name");
-       
+    }
+
+    [Fact]
+    public void ModifyRepeats()
+    {
+        var newRepeats = 60;
+        var programsService = Substitute.For<IProgramsService>();
+        ProgramId programId = new();
+        var program = new Program(
+            programId,
+            "Program name",
+            30,
+            Array.Empty<Point>());
+        programsService.GetProgram(programId).Returns(new Program(
+            programId,
+            "Program name",
+            newRepeats,
+            Array.Empty<Point>()).ToOption());
+
+        var sut = new ProgramOverviewViewModel(program, programsService);
+
+        sut.UpdateRepeats(newRepeats);
+
+        sut.Repeats.Should().Be(newRepeats);
+        sut.Program.Repeats.Should().Be(newRepeats);
+        programsService.Received().UpdateProgramRepeats(program.Id, newRepeats);
     }
 }
 
-public class TestProgramService : IProgramsService
-{
-    public void AddPoint(ProgramId programId, PointId pointId, int wait, int shake)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Program CreateProgram(string productName)
-    {
-        throw new NotImplementedException();
-    }
-
-    public ImmutableList<string> GetAllProgramNames()
-    {
-        throw new NotImplementedException();
-    }
-
-    public ImmutableList<Program> GetAllPrograms()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Option<Program> GetProgram(ProgramId program)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Option<string> GetProgramName(ProgramId programId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void RemovePoint(ProgramId programId, ProgramPointId pointId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void RemoveProgram(ProgramId id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void UpdatePointShake(ProgramId programId, ProgramPointId programPointId, int shake)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void UpdatePointWait(ProgramId programId, ProgramPointId programPointId, int wait)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void UpdateProgramName(ProgramId programId, string newProgramName)
-    {
-        throw new NotImplementedException();
-    }
-}

@@ -37,9 +37,10 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
 
     #region Public Methods
 
-    public void UpdateRepeats(int v)
+    public void UpdateRepeats(int repeats)
     {
-        throw new NotImplementedException();
+        ProgramsService.UpdateProgramRepeats(Program.Id, repeats);
+        Program = ProgramsService.GetProgram(Program.Id).ValueOrDefault(Program.Default);
     }
 
     public void UpdateName(string newProgramName)
