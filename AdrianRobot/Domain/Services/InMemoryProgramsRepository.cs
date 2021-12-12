@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -9,7 +10,7 @@ public class InMemoryProgramsRepository : IProgramsRepository
     public InMemoryProgramsRepository() => Programs = new Dictionary<ProgramId, Program>();
 
     public InMemoryProgramsRepository(IEnumerable<string> programNames) => Programs = programNames
-        .Select(programName => new Program(new ProgramId(), programName, 0))
+        .Select(programName => new Program(new ProgramId(), programName, 0, Array.Empty<Point>()))
         .ToDictionary(program => program.Id);
 
     public InMemoryProgramsRepository(params string[] programNames) : this(programNames.AsEnumerable()) { }

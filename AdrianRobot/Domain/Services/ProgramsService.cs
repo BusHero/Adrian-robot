@@ -15,7 +15,7 @@ public class ProgramsService : IProgramsService
 
     public Program CreateProgram(string productName)
     {
-        var program = new Program(new ProgramId(), productName, 0);
+        var program = new Program(new ProgramId(), productName, 0, Array.Empty<Point>());
         ProgramsRepository.SaveProgram(program);
         return program;
     }
@@ -30,4 +30,7 @@ public class ProgramsService : IProgramsService
 
     public ImmutableList<Program> GetAllPrograms() => ProgramsRepository
         .GetAllPrograms();
+
+    public Option<Program> GetProgram(ProgramId program) => ProgramsRepository
+        .GetProgram(program);
 }

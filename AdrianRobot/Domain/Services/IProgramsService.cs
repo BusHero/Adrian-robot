@@ -1,14 +1,18 @@
-﻿using System.Collections.Immutable;
+﻿using AdrianRobot.Domain;
 
-namespace AdrianRobot.Domain
+using System.Collections.Immutable;
+
+namespace AdrianRobot;
+
+public interface IProgramsService
 {
-    public interface IProgramsService
-    {
-        Program CreateProgram(string productName);
-        ImmutableList<string> GetAllProgramNames();
+    Program CreateProgram(string productName);
 
-        ImmutableList<Program> GetAllPrograms();
+    Option<Program> GetProgram(ProgramId program);
 
-        Option<string> GetProgramName(ProgramId programId);
-    }
+    ImmutableList<string> GetAllProgramNames();
+
+    ImmutableList<Program> GetAllPrograms();
+
+    Option<string> GetProgramName(ProgramId programId);
 }
