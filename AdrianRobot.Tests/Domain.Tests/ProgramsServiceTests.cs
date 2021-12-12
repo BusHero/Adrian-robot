@@ -77,7 +77,7 @@ public class ProgramsServiceTests
         programsService.AddPoint(program.Id, point.Id, wait: 0, shake: 0);
 
         programsRepository.GetProgram(program.Id)
-            .Select(program => program.Points[0].Id)
+            .Select(program => program.Points[0].PointId)
             .Should()
             .Be(point.Id.ToOption());
     }
@@ -114,6 +114,24 @@ public class ProgramsServiceTests
 
         programsRepository.GetProgram(program.Id)
             .Select(program => program.Points[0].Wait)
+            .Should()
+            .Be(30.ToOption());
+    }
+
+    [Fact]
+    public void UpdatePointShake()
+    {
+        var point = new Point(new(), "point", 10, 10);
+        var pointsService = new PointsService(new InMemoryPointRepository(point));
+        var program = new Program(new(), "first", 0, new[] { point });
+        var programPointId = program.Points[0].Id;
+        var programsRepository = new InMemoryProgramsRepository(program);
+        var programsService = new ProgramsService(programsRepository, pointsService);
+
+        programsService.UpdatePointShake(program.Id, programPointId, shake: 30);
+
+        programsRepository.GetProgram(program.Id)
+            .Select(program => program.Points[0].Shake)
             .Should()
             .Be(30.ToOption());
     }

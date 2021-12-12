@@ -41,4 +41,12 @@ public class Program
 
         points[programPointId] = point with { Wait = wait };
     }
+
+    internal void UpdatePointShake(ProgramPointId programPointId, int shake)
+    {
+        if (!points.TryGetValue(programPointId, out var point))
+            return;
+
+        points[programPointId] = point with { Shake = shake };
+    }
 }

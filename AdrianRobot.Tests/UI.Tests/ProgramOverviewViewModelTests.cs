@@ -55,6 +55,11 @@ public class ProgramOverviewViewModelTests
 
 public class TestProgramService : IProgramsService
 {
+    public void AddPoint(ProgramId programId, PointId pointId, int wait, int shake)
+    {
+        throw new NotImplementedException();
+    }
+
     public Program CreateProgram(string productName)
     {
         throw new NotImplementedException();
@@ -80,7 +85,17 @@ public class TestProgramService : IProgramsService
         throw new NotImplementedException();
     }
 
+    public void RemovePoint(ProgramId programId, ProgramPointId pointId)
+    {
+        throw new NotImplementedException();
+    }
+
     public void RemoveProgram(ProgramId id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void UpdatePointWait(ProgramId programId, ProgramPointId programPointId, int wait)
     {
         throw new NotImplementedException();
     }

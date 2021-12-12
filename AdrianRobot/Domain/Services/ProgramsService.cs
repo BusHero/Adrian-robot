@@ -81,5 +81,14 @@ public class ProgramsService : IProgramsService
         ProgramsRepository.SaveProgram(program);
     }
 
+    public void UpdatePointShake(ProgramId programId, ProgramPointId programPointId, int shake)
+    {
+        var program = ProgramsRepository.GetProgram(programId);
+
+        program.Modify(program => program.UpdatePointShake(programPointId, shake));
+
+        ProgramsRepository.SaveProgram(program);
+    }
+
     #endregion
 }
