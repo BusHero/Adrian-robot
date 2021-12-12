@@ -15,4 +15,6 @@ public interface IProgramsService
     ImmutableList<Program> GetAllPrograms();
 
     Option<string> GetProgramName(ProgramId programId);
+
+    void UpdateProgramName(ProgramId programId, string newProgramName);
 }
