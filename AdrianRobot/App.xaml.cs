@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
+using System.Collections.Immutable;
 using System.Windows;
 
 namespace AdrianRobot;
@@ -14,7 +15,13 @@ public partial class App : Application
 
         var serviceProvider = new ServiceCollection()
             .AddSingleton<IProgramOverviewViewModelFactory, ProgramOverviewViewModelFactory>()
-            .AddSingleton<IPointsRepository, InMemoryPointsRepository>()
+            .AddSingleton<IPointsRepository>(_ =>
+            {
+                var repository = new InMemoryPointsRepository();
+                repository.SavePoint(new(new(), "Point 1", 100, 200));
+                repository.SavePoint(new(new(), "Point 2", 150, 250));
+                return repository;
+            })
             .AddSingleton<IPointsService, PointsService>()
             .AddSingleton((Func<IServiceProvider, IProgramsRepository>)(_ =>
             {

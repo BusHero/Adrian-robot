@@ -7,7 +7,7 @@ public class PossiblePointViewModel
         Point = point ?? throw new ArgumentNullException(nameof(point));
     }
 
-    public string Name => Point.Name;
+    public string Name => $"{Point.Name}(y: {Point.MotorYPosition}, z: {Point.MotorZPosition})";
 
     public Point Point { get; }
 }

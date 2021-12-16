@@ -26,6 +26,11 @@
         </Setter>
         <Setter Property="Padding" Value="24,32,0,0"/>
     </Style>
+    <DataTemplate DataType="{x:Type local:PossiblePointViewModel}">
+        <Border Padding="8">
+            <TextBlock Text="{Binding Name}" Style="{StaticResource Body}"/>
+        </Border>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type local:PointViewModel}">
         <Grid >
             <Grid.ColumnDefinitions>
@@ -84,17 +89,20 @@
                                 <Separator/>
                                 <ItemsControl ItemsSource="{Binding Points}"/>
                             </StackPanel>
-                            <Grid DockPanel.Dock="Bottom">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition SharedSizeGroup="A" Width="auto"/>
-                                    <ColumnDefinition SharedSizeGroup="B" Width="auto"/>
-                                    <ColumnDefinition SharedSizeGroup="C" Width="auto"/>
-                                    <ColumnDefinition SharedSizeGroup="D" Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Style="{StaticResource Body}" Padding="8" Grid.Column="1" Margin="0,8,0,0">
-                                    <Hyperlink>Add</Hyperlink>
-                                </TextBlock>
-                            </Grid>
+                            <StackPanel>
+                                <Grid DockPanel.Dock="Bottom">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="A" Width="auto"/>
+                                        <ColumnDefinition SharedSizeGroup="B" Width="auto"/>
+                                        <ColumnDefinition SharedSizeGroup="C" Width="auto"/>
+                                        <ColumnDefinition SharedSizeGroup="D" Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource Body}" Padding="8" Grid.Column="1" Margin="0,8,0,0">
+                                        <Hyperlink>Add</Hyperlink>
+                                    </TextBlock>
+                                </Grid>
+                                <ListBox ItemsSource="{Binding PossiblePoints}"/>
+                            </StackPanel>
                         </StackPanel>
 
                     </HeaderedContentControl>

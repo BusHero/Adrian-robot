@@ -73,7 +73,7 @@
                             <ListView SelectedItem="{Binding SelectedProgram}" ItemsSource="{Binding Path=Programs}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate DataType="{x:Type local:ProgramViewModel}">
-                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock Style="{StaticResource Body}" Text="{Binding Name}"/>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
