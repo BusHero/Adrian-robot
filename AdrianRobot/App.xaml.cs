@@ -13,13 +13,28 @@ public partial class App : Application
         base.OnStartup(e);
 
         var serviceProvider = new ServiceCollection()
-            .AddSingleton<IProgramsRepository>(_ => new InMemoryProgramsRepository("First", "Second", "Third"))
+            .AddSingleton<IProgramOverviewViewModelFactory, ProgramOverviewViewModelFactory>()
+            .AddSingleton<IPointsRepository, InMemoryPointsRepository>()
+            .AddSingleton<IPointsService, PointsService>()
+            .AddSingleton((Func<IServiceProvider, IProgramsRepository>)(_ =>
+            {
+                var repository = new InMemoryProgramsRepository();
+                repository.SaveProgram(new (
+                    new(),
+                    "Program",
+                    10,
+                    Arrays.Of(
+                        new Point(new(), "Point 1", 10, 20),
+                        new Point(new(), "Point 2", 10, 30),
+                        new Point(new(), "Point 3", 10, 10))));
+                return repository;
+            }))
             .AddSingleton<IProgramsService, ProgramsService>()
             .AddSingleton<MainViewModel>()
-            .AddSingleton<Window>(services => new MainWindow
+            .AddSingleton((Func<IServiceProvider, Window>)(services => new MainWindow
             {
                 DataContext = services.GetRequiredService<MainViewModel>()
-            })
+            }))
             .BuildServiceProvider();
 
         var mainViewModel = serviceProvider.GetRequiredService<MainViewModel>();

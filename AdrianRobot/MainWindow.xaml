@@ -3,23 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AdrianRobot"
+        xmlns:local="clr-namespace:AdrianRobot" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d" Background="{StaticResource Background-Brush}"
+        Topmost="True"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
         <Style x:Key="LeftNavbar" TargetType="Border">
             <Setter Property="BorderThickness" Value="0,0,1,0"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="Background" Value="{StaticResource Popup-Color}"/>
-            <Setter Property="Effect" >
-                <Setter.Value>
-                    <DropShadowEffect BlurRadius="3" Opacity=".2"  Direction="0" />
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Effect" Value="{StaticResource Shadow-0}"/>
         </Style>
-        <DataTemplate DataType="{x:Type local:ProgramOverviewViewModel}">
-            <TextBlock Text="{Binding Name}"></TextBlock>
-        </DataTemplate>
         <Style x:Key="Settings-button" TargetType="ToggleButton">
             <Setter Property="Background" Value="{StaticResource Popup-Color}"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -38,11 +32,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter Property="Background" Value="{StaticResource Selected-Color}"/>
-                                <Setter Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect BlurRadius="3" Opacity=".2"  Direction="90" />
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter Property="Effect" Value="{StaticResource Shadow-90}"/>
                             </Trigger>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
@@ -50,18 +40,12 @@
                                     <Condition Property="IsMouseOver" Value="True"/>
                                 </MultiTrigger.Conditions>
                                 <Setter Property="Background" Value="{StaticResource Background-Brush}"/>
-                                <Setter Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect BlurRadius="3" Opacity=".2"  Direction="90" />
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter Property="Effect" Value="{StaticResource Shadow-90}"/>
                             </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-            </Style.Triggers>
         </Style>
     </Window.Resources>
     <Grid>

@@ -1,5 +1,4 @@
-﻿
-using AdrianRobot.Domain;
+﻿using AdrianRobot.Domain;
 
 using System.Collections.Immutable;
 
@@ -7,12 +6,24 @@ namespace AdrianRobot.Tests;
 
 public class ProgramOverviewViewModelTests
 {
+    public IPointsService DefaultPointsService { get; }
+    public IProgramsService DefaultProgramsService { get; }
+
+    public ProgramOverviewViewModelTests()
+    {
+        DefaultPointsService = Substitute.For<IPointsService>();
+        DefaultPointsService.GetPoints().Returns(ImmutableList.Create<Point>());
+
+        DefaultProgramsService = Substitute.For<IProgramsService>();
+    }
+
     [Fact]
     public void ProgramOverviewHasAName()
     {
         var programName = "Program name";
         var program = new Program(new(), programName, 0, Array.Empty<Point>());
-        var sut = new ProgramOverviewViewModel(program, Substitute.For<IProgramsService>());
+        var sut = new ProgramOverviewViewModel(program, 
+            DefaultProgramsService, DefaultPointsService);
 
         sut.Name.Should().Be(programName);
     }
@@ -23,7 +34,8 @@ public class ProgramOverviewViewModelTests
         var programName = "Program name";
         var repeats = 30;
         var program = new Program(new(), programName, repeats, Array.Empty<Point>());
-        var sut = new ProgramOverviewViewModel(program, Substitute.For<IProgramsService>());
+        var sut = new ProgramOverviewViewModel(program,
+            DefaultProgramsService, DefaultPointsService);
 
         sut.Repeats.Should().Be(repeats);
     }
@@ -40,7 +52,8 @@ public class ProgramOverviewViewModelTests
                 new (new PointId(), "Point 1", 100, 100), 
                 new (new PointId(), "Point", 100, 100)
             });
-        var sut = new ProgramOverviewViewModel(program, Substitute.For<IProgramsService>());
+        var sut = new ProgramOverviewViewModel(program,
+            DefaultProgramsService, DefaultPointsService);
 
         sut.Points
             .Select(point => point.Name)
@@ -69,7 +82,7 @@ public class ProgramOverviewViewModelTests
             30,
             Array.Empty<Point>()).ToOption());
 
-        var sut = new ProgramOverviewViewModel(program, programsService);
+        var sut = new ProgramOverviewViewModel(program, programsService, DefaultPointsService);
 
         sut.UpdateName(newProgramName: newProgramName);
 
@@ -95,7 +108,7 @@ public class ProgramOverviewViewModelTests
             newRepeats,
             Array.Empty<Point>()).ToOption());
 
-        var sut = new ProgramOverviewViewModel(program, programsService);
+        var sut = new ProgramOverviewViewModel(program, programsService, DefaultPointsService);
 
         sut.UpdateRepeats(newRepeats);
 
@@ -103,5 +116,24 @@ public class ProgramOverviewViewModelTests
         sut.Program.Repeats.Should().Be(newRepeats);
         programsService.Received().UpdateProgramRepeats(program.Id, newRepeats);
     }
-}
 
+    [Fact]
+    public void PossiblePoints()
+    {
+        var programsService = Substitute.For<IProgramsService>();
+        var pointsService = Substitute.For<IPointsService>();
+        var actualPoints = ImmutableList.Create<Point>(
+            new(new(), "Point 1", 100, 200),
+            new(new(), "Point 2", 150, 250));
+        pointsService.GetPoints().Returns(actualPoints);
+        
+        var programOverview = new ProgramOverviewViewModel(
+            Program.Default,
+            programsService, pointsService);
+        
+        programOverview.PossiblePoints
+            .Select(point => point.Point)
+            .Should()
+            .BeEquivalentTo(actualPoints);
+    }
+}

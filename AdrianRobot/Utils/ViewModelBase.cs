@@ -125,7 +125,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
 
     #endregion
 
-    protected NamedViewModel<TItem> ToViewModel<TItem>(string name, TItem item) => new NamedViewModel<TItem>(name, item);
+    protected static NamedViewModel<TItem> ToViewModel<TItem>(string name, TItem item) => new(name, item);
 
     public class NamedViewModel<TItem>
     {
@@ -150,7 +150,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
     public static NamedViewModel<TItem> NewNamedViewModel<TItem>(string name, TItem item) => new(name, item);
 }
 
-public delegate void PropertyChangedEventHandler<T>(T? sender, PropertyChangedEventArgs e);
+public delegate void PropertyChangedEventHandler<T>(T sender, PropertyChangedEventArgs e);
 
 
 public abstract class ViewModelBase<T> : ViewModelBase 
@@ -158,7 +158,7 @@ public abstract class ViewModelBase<T> : ViewModelBase
 {
     public virtual T? SubscribePropertyChanged(
         string propertyName,
-        Action<T?> eventHandler) => SubscribePropertyChanged(propertyName, (sender, _) => { eventHandler(sender); });
+        Action<T> eventHandler) => SubscribePropertyChanged(propertyName, (sender, _) => { eventHandler(sender); });
 
     public virtual T? SubscribePropertyChanged(
         string propertyName,

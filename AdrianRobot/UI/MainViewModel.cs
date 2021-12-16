@@ -1,7 +1,6 @@
 ﻿using AdrianRobot.Domain;
 
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace AdrianRobot;
@@ -35,13 +34,14 @@ public class MainViewModel : ViewModelBase
     #region Services
 
     private IProgramsService ProgramsService { get; }
+    private IProgramOverviewViewModelFactory ProgramOverviewViewModelFactory { get; }
 
     #endregion
 
-    public MainViewModel(IProgramsService programsService)
+    public MainViewModel(IProgramsService programsService, IProgramOverviewViewModelFactory programOverviewViewModelFactory)
     {
-        ProgramsService = programsService;
-
+        ProgramsService = programsService ?? throw new ArgumentNullException(nameof(programsService));
+        ProgramOverviewViewModelFactory = programOverviewViewModelFactory ?? throw new ArgumentNullException(nameof(programOverviewViewModelFactory));
         AddProgramCommand = Commands.NewCommand(CreateNewProgram);
 
         settingsViewModel = new SettingsViewModel();
@@ -89,7 +89,7 @@ public class MainViewModel : ViewModelBase
             return;
 
         UnselectAllProgramsExcept(program);
-        Selected = new ProgramOverviewViewModel(program.Program, ProgramsService);
+        Selected = ProgramOverviewViewModelFactory.CreateProgramOverviewViewModel(program.Program);
     }
 
     private void SelectedProgramChanged()

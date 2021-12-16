@@ -6,6 +6,11 @@
     <SolidColorBrush x:Key="Popup-Color" Color="#ffffff"/>
     <SolidColorBrush x:Key="Selected-Color" Color="#ebf5ff"/>
 
+    <DropShadowEffect x:Key="Shadow-0" BlurRadius="3" Opacity=".2"  Direction="0" />
+    <DropShadowEffect x:Key="Shadow-45" BlurRadius="3" Opacity=".2"  Direction="0" />
+    <DropShadowEffect x:Key="Shadow-90" BlurRadius="3" Opacity=".2"  Direction="0" />
+
+
     <Style x:Key="Heading1" TargetType="TextBlock">
         <Setter Property="FontSize" Value="40"/>
         <Setter Property="FontFamily" Value="Roboto"/>
@@ -20,5 +25,17 @@
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="FontFamily" Value="Roboto" />
         <Setter Property="Foreground" Value="{StaticResource Black-Color}"/>
+    </Style>
+    <Style x:Key="Body" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontFamily" Value="Roboto"/>
+        <Setter Property="Foreground" Value="{StaticResource Black-Color}"/>
+    </Style>
+    <Style x:Key="Table-Header" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#392222"/>
+        <Setter Property="Opacity" Value=".5"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="FontFamily" Value="Roboto"/>
     </Style>
 </ResourceDictionary>
