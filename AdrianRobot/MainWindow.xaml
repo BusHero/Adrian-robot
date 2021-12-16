@@ -47,6 +47,16 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <DataTemplate DataType="{x:Type local:ProgramViewModel}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource Body}" Text="{Binding Name}"/>
+                <Button Grid.Column="1" Content="Delete" Command="{Binding DeleteProgramCommand}"/>
+            </Grid>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -66,17 +76,11 @@
                             <TextBlock Margin="0,0,0,0" Style="{StaticResource Heading2}" Text="Programs"></TextBlock>
                         </HeaderedContentControl.Header>
                         <DockPanel>
-                            <Button Foreground="{StaticResource Hyperlink-Color}" 
-                                    DockPanel.Dock="Bottom"
-                                    Command="{Binding AddProgramCommand}"
-                                    Content="Add"/>
-                            <ListView SelectedItem="{Binding SelectedProgram}" ItemsSource="{Binding Path=Programs}">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type local:ProgramViewModel}">
-                                        <TextBlock Style="{StaticResource Body}" Text="{Binding Name}"/>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
+                            <TextBlock DockPanel.Dock="Bottom" Style="{StaticResource Body}">
+                                <Hyperlink Command="{Binding AddProgramCommand}">Add</Hyperlink>
+                            </TextBlock>
+                            <ListView HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedProgram}" ItemsSource="{Binding Path=Programs}"/>
+
                         </DockPanel>
                     </HeaderedContentControl>
                 </Border>

@@ -47,8 +47,7 @@ public class MainViewModel : ViewModelBase
         settingsViewModel = new SettingsViewModel();
         Programs = programsService.GetAllPrograms() switch
         {
-            { Count: > 0 } programs => new ObservableCollection<ProgramViewModel>(
-                programs.Select(CreateProgramViewModel)),
+            { Count: > 0 } programs => programs.Select(CreateProgramViewModel).ToObservableCollection(),
             _ => new ObservableCollection<ProgramViewModel>()
         };
 
@@ -66,19 +65,38 @@ public class MainViewModel : ViewModelBase
     public void CreateNewProgram()
     {
         var program = ProgramsService.CreateProgram("New Program");
+        
         var programViewModel = CreateProgramViewModel(program);
+
         Programs.Add(programViewModel);
+        UnselectAllPrograms();
+        programViewModel.IsSelected = true;
     }
 
     #endregion
 
     #region Private Methods
 
+    private void DeleteProgramViewModel(ProgramViewModel programViewModel)
+    {
+        Programs.Remove(programViewModel);
+        ProgramsService.RemoveProgram(programViewModel.Program.Id);
+        UnselectAllPrograms();
+        if (Programs.Count != 0)
+            Programs[0].IsSelected = true;
+        else
+        {
+            SelectedProgram = default;
+            Selected = default;
+        }
+    }
+
     private ProgramViewModel CreateProgramViewModel(Program program)
     {
         var programViewModel = new ProgramViewModel(program);
 
         programViewModel.SubscribePropertyChanged(nameof(programViewModel.IsSelected), UpdateSelectedProperties);
+        programViewModel.SubscribePropertyChanged(nameof(programViewModel.IsDeleted), DeleteProgramViewModel);
 
         return programViewModel;
     }
