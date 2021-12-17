@@ -12,15 +12,17 @@ public class PointViewModel: ViewModelBase<PointViewModel>
     {
         Point = point ?? throw new ArgumentNullException(nameof(point));
         RemoveCommand = Commands.NewCommand(() => IsRemoved = true);
+        Wait = Point.Wait;
+        Shake = Point.Shake;
     }
 
     public ProgramPoint Point { get; }
 
     public string Name => $"{Point.Name} (y: {Point.MotorYPosition}, z: {Point.MotorZPosition})";
 
-    public int Wait => Point.Wait;
+    public int Wait { get; set; }
 
-    public int Shake => Point.Shake;
+    public int Shake { get; set; }
 
     public ICommand RemoveCommand { get; }
 

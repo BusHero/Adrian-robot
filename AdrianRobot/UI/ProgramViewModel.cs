@@ -15,6 +15,7 @@ public class ProgramViewModel : ViewModelBase<ProgramViewModel>
         IsSelected = isSelected;
         IsDeleted = false;
         DeleteProgramCommand = Commands.NewCommand(() => IsDeleted = true);
+        SelectCommand = Commands.NewCommand(() => IsSelected = true);
     }
 
     public Program Program { get; }
@@ -26,4 +27,6 @@ public class ProgramViewModel : ViewModelBase<ProgramViewModel>
     public bool IsDeleted { get => isDeleted; set => Set(ref isDeleted, value); }
 
     public ICommand DeleteProgramCommand { get; }
+
+    public ICommand SelectCommand { get; }
 }

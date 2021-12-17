@@ -1,6 +1,7 @@
 ﻿using AdrianRobot.Domain;
 
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace AdrianRobot;
 
@@ -10,9 +11,10 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
 
     private string name = default!;
     private int repeats;
+    private bool arePossiblePointsShown;
 
     #endregion
-    
+
     #region Private Services
 
     private IProgramsService ProgramsService { get; }
@@ -31,10 +33,14 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
     public int Repeats { get => repeats; set => Set(ref repeats, value); }
     public ObservableCollection<PossiblePointViewModel> PossiblePoints { get; }
 
+    public bool ArePossiblePointsShown { get => arePossiblePointsShown; set => Set(ref arePossiblePointsShown, value); }
+
+    public ICommand ShowPossiblePointsCommand { get; }
+
     #endregion
 
     public ProgramOverviewViewModel(Program program,
-        IProgramsService programsService, 
+        IProgramsService programsService,
         IPointsService pointsService)
     {
         ProgramsService = programsService ?? throw new ArgumentNullException(nameof(programsService));
@@ -44,7 +50,8 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
         Points = Program.Points.Select(ToPointViewModel).ToObservableCollection();
         Name = Program.Name;
         Repeats = Program.Repeats;
-        PossiblePoints = PointsService.GetPoints().Select(point => new PossiblePointViewModel(point)).ToObservableCollection();
+        PossiblePoints = PointsService.GetPoints().Select(ToPossiblePointViewModel).ToObservableCollection();
+        ShowPossiblePointsCommand = Commands.NewCommand(() => ArePossiblePointsShown = true);
     }
 
     #region Public Methods
@@ -67,6 +74,28 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
 
     #region Private Methods
 
+    private PossiblePointViewModel ToPossiblePointViewModel(Point point)
+    {
+        var pointViewModel = new PossiblePointViewModel(point);
+
+        pointViewModel.SubscribePropertyChanged(nameof(pointViewModel.IsSelected), HandlePossiblePointSelected);
+
+        return pointViewModel;
+    }
+
+    private void HandlePossiblePointSelected(PossiblePointViewModel pointViewModel)
+    {
+        foreach (var possiblePoint in PossiblePoints)
+            possiblePoint.isSelected = false;
+        ArePossiblePointsShown = false;
+
+        ProgramsService.AddPoint(Program.Id, pointViewModel.Point.Id, 0, 0);
+        Program.AddPoint(pointViewModel.Point, 0, 0);
+        var programPoint = Program.Points.FirstOrDefault(x => x.PointId == pointViewModel.Point.Id);
+        var programPointViewModel = ToPointViewModel(programPoint);
+        Points.Add(programPointViewModel);
+    }   
+
     private PointViewModel ToPointViewModel(ProgramPoint point)
     {
         var pointViewModel = new PointViewModel(point);
@@ -77,8 +106,8 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
     private void HandleRemovePoint(ProgramPoint point)
     {
         ProgramsService.RemovePoint(Program.Id, point.Id);
-        Program.RemovePoint(point.Id);
         Points.Remove(Points.First(pointViewModel => pointViewModel.Point == point));
+        Program.RemovePoint(point.Id);
     }
 
     #endregion

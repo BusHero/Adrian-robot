@@ -8,4 +8,9 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
+
+    private void TextBlock_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+
+    }
 }

@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:AdrianRobot" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d" Background="{StaticResource Background-Brush}"
         Topmost="True"
-        Title="MainWindow" Height="450" Width="800">
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        Title="Robot" Height="450" Width="800">
     <Window.Resources>
         <Style x:Key="LeftNavbar" TargetType="Border">
             <Setter Property="BorderThickness" Value="0,0,1,0"/>
@@ -27,7 +28,7 @@
                                 BorderBrush="Black" 
                                 Background="{TemplateBinding Background}" 
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <ContentPresenter Margin="0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
@@ -48,14 +49,34 @@
             </Setter>
         </Style>
         <DataTemplate DataType="{x:Type local:ProgramViewModel}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Style="{StaticResource Body}" Text="{Binding Name}"/>
-                <Button Grid.Column="1" Content="Delete" Command="{Binding DeleteProgramCommand}"/>
-            </Grid>
+            <Border Padding="4" Margin="0,8,0,0">
+                <Border  CornerRadius="5" Name="Border" Background="Transparent" Padding="16" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown">
+                            <i:InvokeCommandAction Command="{Binding SelectCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock MouseDown="TextBlock_MouseDown" Style="{StaticResource Body}" Text="{Binding Name}"/>
+                        <Button x:Name="DeleteButton" Visibility="Collapsed" Style="{StaticResource Button.Close}" Grid.Column="1" Content="Delete" Command="{Binding DeleteProgramCommand}"/>
+                    </Grid>
+                </Border>
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter TargetName="Border" Property="Background" Value="{StaticResource Selected-Color}"/>
+                    <Setter TargetName="DeleteButton" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <Trigger SourceName="Border" Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Border" Property="Effect" Value="{StaticResource Shadow-270}"/>
+                    <Setter TargetName="Border" Property="Background" Value="{StaticResource Background-Brush}"/>
+                    <Setter TargetName="DeleteButton" Property="Visibility" Value="Visible"/>
+                </Trigger>
+            </DataTemplate.Triggers>
         </DataTemplate>
     </Window.Resources>
     <Grid>
@@ -63,29 +84,107 @@
             <ColumnDefinition Width="232" />
             <ColumnDefinition  />
         </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <ContentPresenter Content="{Binding Selected}"/>
+            <Border Padding="8" Grid.Row="1" Height="224" Background="{StaticResource Popup-Color}" Effect="{StaticResource Shadow-90}">
+                <Grid>
+                    <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsManipulationEnabled="False"
+                             Background="Transparent"
+                             Text="{Binding ConsoleText}" AcceptsReturn="True" IsReadOnly="True"
+                             Style="{StaticResource AwesomeTextBox}"></TextBox>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" >
+                        <Viewbox Width="24" Height="24" Margin="0,0,8,0" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Uniform">
+                            <Canvas Name="svg836" Width="21" Height="24">
+                                <Canvas.RenderTransform>
+                                    <TranslateTransform X="0" Y="0"/>
+                                </Canvas.RenderTransform>
+                                <Canvas.Resources/>
+                                <!--Unknown tag: sodipodi:namedview-->
+                                <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="Icon_awesomecopy" Fill="#FF392222">
+                                    <Path.Data>
+                                        <PathGeometry Figures="M15 21v1.875A1.125 1.125 0 0 1 13.875 24H1.125A1.125 1.125 0 0 1 0 22.875V5.625A1.125 1.125 0 0 1 1.125 4.5H4.5V18.375A2.628 2.628 0 0 0 7.125 21ZM15 4.875V0H7.125A1.125 1.125 0 0 0 6 1.125v17.25A1.125 1.125 0 0 0 7.125 19.5h12.75A1.125 1.125 0 0 0 21 18.375V6H16.125A1.128 1.128 0 0 1 15 4.875Zm5.671-1.454L17.579.329a1.125 1.125 0 0 0-.8-.329H16.5V4.5H21V4.216a1.125 1.125 0 0 0-.329-.8Z" FillRule="NonZero"/>
+                                    </Path.Data>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                        <Viewbox Width="24" Height="24" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Uniform">
+                            <Canvas Name="svg3" Width="21" Height="21">
+                                <Canvas.RenderTransform>
+                                    <TranslateTransform X="0" Y="0"/>
+                                </Canvas.RenderTransform>
+                                <Canvas.Resources/>
+                                <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="Icon_materialclear" Fill="#FF392222">
+                                    <Path.Data>
+                                        <PathGeometry Figures="M28.5 9.615 26.385 7.5 18 15.885 9.615 7.5 7.5 9.615 15.885 18 7.5 26.385 9.615 28.5 18 20.115 26.385 28.5 28.5 26.385 20.115 18Z" FillRule="NonZero"/>
+                                    </Path.Data>
+                                    <Path.RenderTransform>
+                                        <TranslateTransform X="-7.5" Y="-7.5"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
         <Border Style="{StaticResource LeftNavbar}" Grid.Column="0">
             <DockPanel>
                 <ToggleButton IsChecked="{Binding IsSettingsSelected}" Style="{StaticResource Settings-button}"
-                        Height="72" DockPanel.Dock="Bottom">
-                    <TextBlock Style="{StaticResource Heading3}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                              Height="72" DockPanel.Dock="Bottom">
+                    <Grid  Margin="16" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Viewbox Width="36" Height="36" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Uniform">
+                            <Canvas Name="Icon_feathersettings" Width="39" Height="39">
+                                <Canvas.RenderTransform>
+                                    <TranslateTransform X="0" Y="0"/>
+                                </Canvas.RenderTransform>
+                                <Canvas.Resources/>
+                                <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="Path_1" StrokeThickness="3" Stroke="#FF000000" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round">
+                                    <Path.Data>
+                                        <PathGeometry Figures="M22.5 18A4.5 4.5 0 1 1 18 13.5 4.5 4.5 0 0 1 22.5 18Z" FillRule="NonZero"/>
+                                    </Path.Data>
+                                    <Path.RenderTransform>
+                                        <TranslateTransform X="1.5" Y="1.5"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                                <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="Path_2" StrokeThickness="3" Stroke="#FF000000" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round">
+                                    <Path.Data>
+                                        <PathGeometry Figures="M31.609 24.409a2.7 2.7 0 0 0 .54 2.978l.1.1a3.275 3.275 0 1 1-4.631 4.631l-.1-.1A2.722 2.722 0 0 0 22.9 33.949v.278a3.273 3.273 0 1 1-6.545 0V34.08a2.7 2.7 0 0 0-1.767-2.471 2.7 2.7 0 0 0-2.978.54l-.1.1a3.275 3.275 0 1 1-4.631-4.631l.1-.1A2.722 2.722 0 0 0 5.051 22.9H4.773a3.273 3.273 0 1 1 0-6.545H4.92a2.7 2.7 0 0 0 2.471-1.767 2.7 2.7 0 0 0-.54-2.978l-.1-.1a3.275 3.275 0 1 1 4.631-4.631l.1.1a2.7 2.7 0 0 0 2.978.54h.131a2.7 2.7 0 0 0 1.636-2.471V4.773a3.273 3.273 0 0 1 6.545 0V4.92a2.722 2.722 0 0 0 4.615 1.931l.1-.1a3.275 3.275 0 1 1 4.631 4.631l-.1.1a2.7 2.7 0 0 0-.54 2.978v.131a2.7 2.7 0 0 0 2.471 1.636h.278a3.273 3.273 0 0 1 0 6.545H34.08a2.7 2.7 0 0 0-2.471 1.636Z" FillRule="NonZero"/>
+                                    </Path.Data>
+                                    <Path.RenderTransform>
+                                        <TranslateTransform X="0" Y="0"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                        <TextBlock Margin="16,0,0,0" Grid.Column="1" Style="{StaticResource Heading3}" VerticalAlignment="Center" HorizontalAlignment="Left"
                                Text="Settings"/>
+                    </Grid>
                 </ToggleButton>
                 <Border >
-                    <HeaderedContentControl Margin="16,64,0,0">
+                    <HeaderedContentControl Margin="16,64,8,0">
                         <HeaderedContentControl.Header>
                             <TextBlock Margin="0,0,0,0" Style="{StaticResource Heading2}" Text="Programs"></TextBlock>
                         </HeaderedContentControl.Header>
                         <DockPanel>
-                            <TextBlock DockPanel.Dock="Bottom" Style="{StaticResource Body}">
+                            <TextBlock Margin="8,8,0,0" DockPanel.Dock="Bottom" Style="{StaticResource Body}">
                                 <Hyperlink Command="{Binding AddProgramCommand}">Add</Hyperlink>
                             </TextBlock>
-                            <ListView HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedProgram}" ItemsSource="{Binding Path=Programs}"/>
-
+                            <ItemsControl HorizontalContentAlignment="Stretch" ItemsSource="{Binding Path=Programs}">
+                            </ItemsControl>
                         </DockPanel>
                     </HeaderedContentControl>
                 </Border>
             </DockPanel>
         </Border>
-        <ContentPresenter Grid.Column="1" Content="{Binding Selected}"/>
     </Grid>
 </Window>

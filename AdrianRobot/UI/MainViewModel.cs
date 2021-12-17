@@ -18,7 +18,7 @@ public class MainViewModel : ViewModelBase
     #endregion
 
     #region Properties
-
+    public string ConsoleText { get; set; } = "Start Program...\nNavigate to Point 1\nWait 5 seconds\nShake to seconds\nNavigate Point 2\nWait 2 seconds";
     public ObservableCollection<ProgramViewModel> Programs { get; }
 
     public ViewModelBase? Selected { get => selected; set => Set(ref selected, value); }
@@ -138,5 +138,6 @@ public class MainViewModel : ViewModelBase
         foreach (var program in Programs.Where(program => program != except))
             program.IsSelected = false;
     }
+
     #endregion
 }
