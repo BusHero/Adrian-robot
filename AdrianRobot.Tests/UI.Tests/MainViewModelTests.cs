@@ -60,15 +60,17 @@ public class MainViewModelTests
     public void CreateNewProgram()
     {
         var config = new Config();
-        var foo = config.ProgramNames.Select((name, i) => (i == 0, name));
+        var foo = config.ProgramNames.Select((name, i) => (i == 0, name)).ToList();
 
         var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory);
 
         mainViewModel.CreateNewProgram();
 
+        foo[0] = (false, foo[0].name);
+
         mainViewModel.Programs.Select(program => (program.IsSelected, program.Name))
             .Should()
-            .BeEquivalentTo(foo.Append((false, "New Program")));
+            .BeEquivalentTo(foo.Append((true, "New Program")));
     }
 
     [Fact]
