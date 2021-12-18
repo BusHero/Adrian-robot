@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -151,7 +148,6 @@ public abstract class ViewModelBase : INotifyPropertyChanged
 }
 
 public delegate void PropertyChangedEventHandler<T>(T sender, PropertyChangedEventArgs e);
-
 
 public abstract class ViewModelBase<T> : ViewModelBase 
     where T : ViewModelBase<T>
