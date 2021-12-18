@@ -47,6 +47,7 @@ public class ProgramsService : IProgramsService
             .GetProgram(programId)
             .Modify(program => program.Name = newProgramName);
         ProgramsRepository.SaveProgram(program);
+        FireProgramNameUpdatedEvent(program);
     }
 
     public void RemoveProgram(ProgramId id) => ProgramsRepository.RemoveProgram(id);
@@ -93,12 +94,40 @@ public class ProgramsService : IProgramsService
 
     public void UpdateProgramRepeats(ProgramId programId, int repeats)
     {
-        var program = ProgramsRepository.GetProgram(programId);
-
-        program.Modify(program => program.Repeats = repeats);
-
+        var program = ProgramsRepository
+            .GetProgram(programId)
+            .Modify(program => program.Repeats = repeats);
         ProgramsRepository.SaveProgram(program);
+        FireProgramRepeatsUpdatedEvent(program);
     }
+
+    #endregion
+
+    #region private methods
+
+    private void FireProgramNameUpdatedEvent(Option<Program> program)
+    {
+        if (program is Some<Program> { Value: {Id: var id, Name: var name } })
+        {
+            ProgramNameUpdatedEvent?.Invoke(this, new(id, name));
+        }
+    }
+
+    private void FireProgramRepeatsUpdatedEvent(Option<Program> program)
+    {
+        if (program is Some<Program> { Value: { Id: var id, Repeats: var repeats } })
+        {
+            ProgramRepeatsUpdatedEvent?.Invoke(this, new(id, repeats));
+        }
+    }
+
+
+    #endregion
+
+    #region Events
+
+    public event EventHandler<ProgramNameUpdatedEventArgs> ProgramNameUpdatedEvent;
+    public event EventHandler<ProgramRepeatsUpdateEventArgs> ProgramRepeatsUpdatedEvent;
 
     #endregion
 }

@@ -19,6 +19,7 @@ public class ProgramsServiceTests
         var program = new Program(new(), "first", 0, Array.Empty<Point>());
         var programsRepository = new InMemoryProgramsRepository(program);
         var programsService = new ProgramsService(programsRepository, Substitute.For<IPointsService>());
+        var monitor = programsService.Monitor();
 
         programsService.UpdateProgramRepeats(program.Id, repeats);
 
@@ -26,6 +27,10 @@ public class ProgramsServiceTests
             .Select(program => program.Repeats)
             .Should()
             .Be(repeats.ToOption());
+        monitor.Should()
+            .Raise(nameof(programsService.ProgramRepeatsUpdatedEvent))
+            .WithSender(programsService)
+            .WithArgs<ProgramRepeatsUpdateEventArgs>(args => args.Repeats == repeats);
     }
 
     [Fact]
@@ -71,6 +76,7 @@ public class ProgramsServiceTests
         var program = new Program(new(), "first", 0, Array.Empty<Point>());
         var repository = new InMemoryProgramsRepository(program);
         var programsService = new ProgramsService(repository, Substitute.For<IPointsService>());
+        var monitor = programsService.Monitor();
 
         programsService.UpdateProgramName(program.Id, "New Program Name");
 
@@ -79,6 +85,10 @@ public class ProgramsServiceTests
             .Select(program => program.Name)
             .Should()
             .Be("New Program Name".ToOption());
+        monitor.Should()
+            .Raise(nameof(programsService.ProgramNameUpdatedEvent))
+            .WithSender(programsService)
+            .WithArgs<ProgramNameUpdatedEventArgs>(args => args.Name == "New Program Name");
     }
 
     [Fact]

@@ -52,6 +52,9 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
         Repeats = Program.Repeats;
         PossiblePoints = PointsService.GetPoints().Select(ToPossiblePointViewModel).ToObservableCollection();
         ShowPossiblePointsCommand = Commands.NewCommand(() => ArePossiblePointsShown = true);
+
+        SubscribePropertyChanged(nameof(Repeats), @this => UpdateRepeats(@this.Repeats));
+        SubscribePropertyChanged(nameof(Name), @this => UpdateName(@this.Name));
     }
 
     #region Public Methods

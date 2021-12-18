@@ -184,7 +184,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="Repeats:" Style="{StaticResource Heading3}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                            <TextBox Style="{StaticResource AwesomeTextBox}" PreviewTextInput="PreviewTextInput" Grid.Column="1" Text="{Binding Repeats}"/>
+                            <TextBox Style="{StaticResource AwesomeTextBox}"  Grid.Column="1" Text="{Binding Repeats, UpdateSourceTrigger=LostFocus}"/>
                         </Grid>
                     </HeaderedContentControl>
                 </Border>
