@@ -25,9 +25,25 @@ public class ProgramsExecutionService
     public void ExecuteProgram(Program program)
     {
         FireCommandExecutedEvent($"Start Executing {program.Name}");
-        
-        
-        
+
+        for (var cycle = 1; cycle < program.Repeats + 1; cycle++)
+        {
+            FireCommandExecutedEvent($"Start cycle {cycle} of {program.Repeats}");
+
+            foreach (var point in program.Points)
+            {
+                FireCommandExecutedEvent($"Navigating to {point.Name}(y: {point.MotorYPosition}, z: {point.MotorZPosition})");
+                FireCommandExecutedEvent($"Waiting for {point.Wait} seconds");
+                if (point.Shake != 0)
+                {
+                    FireCommandExecutedEvent($"Shaking for {point.Shake} seconds");
+                }
+            }
+
+            FireCommandExecutedEvent($"Finish cycle {cycle} of {program.Repeats}");
+        }
+
+
         FireCommandExecutedEvent($"Finish Executing {program.Name}");
     }
 

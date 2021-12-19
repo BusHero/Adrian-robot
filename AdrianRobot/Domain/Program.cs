@@ -36,7 +36,7 @@ public class Program
 
     public void RemovePoint(ProgramPointId programPointId) => points.Remove(programPointId);
 
-    internal void UpdatePointWait(ProgramPointId programPointId, int wait)
+    public void UpdatePointWait(ProgramPointId programPointId, int wait)
     {
         if (!points.TryGetValue(programPointId, out var point))
             return;
@@ -44,7 +44,7 @@ public class Program
         points[programPointId] = point with { Wait = wait };
     }
 
-    internal void UpdatePointShake(ProgramPointId programPointId, int shake)
+    public void UpdatePointShake(ProgramPointId programPointId, int shake)
     {
         if (!points.TryGetValue(programPointId, out var point))
             return;
