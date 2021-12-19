@@ -11,7 +11,8 @@ public class MainViewModelTests
     {
         var config = new Config(Array.Empty<string>());
 
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory, 
+            Substitute.For<IProgramsExecutionService>());
         
         mainViewModel.Programs.Should().BeEmpty();
     }
@@ -21,7 +22,7 @@ public class MainViewModelTests
     {
         var newName = "Awesome new name";
         var config = new Config();
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory, Substitute.For<IProgramsExecutionService>());
         
         config.ProgramsService.ProgramNameUpdatedEvent += Raise.EventWith(new ProgramNameUpdatedEventArgs(config.Programs[0].Id, newName));
 
@@ -32,7 +33,7 @@ public class MainViewModelTests
     public void ProgramsComesFromTheProgramsService()
     {
         var config = new Config();
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory, Substitute.For<IProgramsExecutionService>());
         mainViewModel.Programs
             .Select(program => program.Name)
             .Should()
@@ -44,7 +45,7 @@ public class MainViewModelTests
     {
         var config = new Config();
         
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory, Substitute.For<IProgramsExecutionService>());
 
         mainViewModel.Programs[0].IsSelected.Should().Be(true);
         mainViewModel.Selected.Should()
@@ -56,7 +57,7 @@ public class MainViewModelTests
     {
         var config = new Config();
 
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory, Substitute.For<IProgramsExecutionService>());
         mainViewModel.Programs[1].IsSelected = true;
 
         mainViewModel.Programs
@@ -74,7 +75,7 @@ public class MainViewModelTests
         var config = new Config();
         var foo = config.ProgramNames.Select((name, i) => (i == 0, name)).ToList();
 
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory, Substitute.For<IProgramsExecutionService>());
 
         mainViewModel.CreateNewProgram();
 
@@ -90,7 +91,7 @@ public class MainViewModelTests
     {
         var config = new Config();
 
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory)
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory, Substitute.For<IProgramsExecutionService>())
         {
             IsSettingsSelected = true
         };
@@ -105,7 +106,7 @@ public class MainViewModelTests
     {
         var config = new Config();
 
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory)
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory, Substitute.For<IProgramsExecutionService>())
         {
             IsSettingsSelected = true
         };

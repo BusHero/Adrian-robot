@@ -2,7 +2,7 @@
 
 namespace AdrianRobot;
 
-public class ProgramsExecutionService
+public class ProgramsExecutionService : IProgramsExecutionService
 {
     public IProgramsRepository ProgramsRepository { get; }
 

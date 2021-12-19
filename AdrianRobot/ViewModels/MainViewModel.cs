@@ -29,6 +29,8 @@ public class MainViewModel : ViewModelBase
 
     public bool IsSettingsSelected { get => isSettingsSelected; set => Set(ref isSettingsSelected, value); }
 
+    public ViewModelBase ConsoleViewModel { get; }
+
     #endregion
 
     #region Services
@@ -39,14 +41,17 @@ public class MainViewModel : ViewModelBase
 
     #endregion
 
-    public MainViewModel(IProgramsService programsService,
-        IProgramOverviewViewModelFactory programOverviewViewModelFactory, IProgramsViewModelFactory programsViewModelFactory)
+    public MainViewModel(
+        IProgramsService programsService,
+        IProgramOverviewViewModelFactory programOverviewViewModelFactory,
+        IProgramsViewModelFactory programsViewModelFactory, IProgramsExecutionService programsExecutionService)
     {
         ProgramsService = programsService ?? throw new ArgumentNullException(nameof(programsService));
         ProgramOverviewViewModelFactory = programOverviewViewModelFactory ?? throw new ArgumentNullException(nameof(programOverviewViewModelFactory));
         AddProgramCommand = Commands.NewCommand(CreateNewProgram);
         ProgramsViewModelFactory = programsViewModelFactory ?? throw new ArgumentNullException(nameof(programOverviewViewModelFactory));
 
+        ConsoleViewModel = new ConsoleViewModel(programsExecutionService);
         settingsViewModel = new SettingsViewModel();
         Programs = programsService.GetAllPrograms() switch
         {
