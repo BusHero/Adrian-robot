@@ -6,6 +6,9 @@ namespace AdrianRobot;
 
 public interface IProgramsService
 {
+    event EventHandler<ProgramNameUpdatedEventArgs>? ProgramNameUpdatedEvent;
+    event EventHandler<ProgramRepeatsUpdateEventArgs>? ProgramRepeatsUpdatedEvent;
+
     Program CreateProgram(string productName);
 
     Option<Program> GetProgram(ProgramId program);

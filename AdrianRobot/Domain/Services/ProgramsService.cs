@@ -126,8 +126,8 @@ public class ProgramsService : IProgramsService
 
     #region Events
 
-    public event EventHandler<ProgramNameUpdatedEventArgs> ProgramNameUpdatedEvent;
-    public event EventHandler<ProgramRepeatsUpdateEventArgs> ProgramRepeatsUpdatedEvent;
+    public event EventHandler<ProgramNameUpdatedEventArgs>? ProgramNameUpdatedEvent;
+    public event EventHandler<ProgramRepeatsUpdateEventArgs>? ProgramRepeatsUpdatedEvent;
 
     #endregion
 }

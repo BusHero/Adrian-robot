@@ -38,7 +38,8 @@ public class MainViewModel : ViewModelBase
 
     #endregion
 
-    public MainViewModel(IProgramsService programsService, IProgramOverviewViewModelFactory programOverviewViewModelFactory)
+    public MainViewModel(IProgramsService programsService,
+        IProgramOverviewViewModelFactory programOverviewViewModelFactory)
     {
         ProgramsService = programsService ?? throw new ArgumentNullException(nameof(programsService));
         ProgramOverviewViewModelFactory = programOverviewViewModelFactory ?? throw new ArgumentNullException(nameof(programOverviewViewModelFactory));
@@ -93,7 +94,7 @@ public class MainViewModel : ViewModelBase
 
     private ProgramViewModel CreateProgramViewModel(Program program)
     {
-        var programViewModel = new ProgramViewModel(program);
+        var programViewModel = new ProgramViewModel(ProgramsService, program);
 
         programViewModel.SubscribePropertyChanged(nameof(programViewModel.IsSelected), UpdateSelectedProperties);
         programViewModel.SubscribePropertyChanged(nameof(programViewModel.IsDeleted), DeleteProgramViewModel);

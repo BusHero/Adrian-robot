@@ -17,6 +17,18 @@ public class MainViewModelTests
     }
 
     [Fact]
+    public void ProgramNameGetsUpdated()
+    {
+        var newName = "Awesome new name";
+        var config = new Config();
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory);
+        
+        config.ProgramsService.ProgramNameUpdatedEvent += Raise.EventWith(new ProgramNameUpdatedEventArgs(config.Programs[0].Id, newName));
+
+        mainViewModel.Programs[0].Name.Should().Be(newName);
+    }
+
+    [Fact]
     public void ProgramsComesFromTheProgramsService()
     {
         var config = new Config();
@@ -120,7 +132,7 @@ public class Config
     private ImmutableList<string> SetupProgramNames(IEnumerable<string> programs) => programs.ToImmutableList();
 
     private ImmutableList<Program> SetupPrograms(IEnumerable<string> programs) => programs
-        .Select(program => new Program(new ProgramId(), program, 0, Array.Empty<Point>()))
+        .Select(programName => new Program(new (), programName, 0, Array.Empty<Point>()))
         .ToImmutableList();
 
     private IPointsService SetupPointsService()
