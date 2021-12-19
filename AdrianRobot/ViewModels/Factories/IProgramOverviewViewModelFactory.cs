@@ -23,3 +23,4 @@ public class ProgramOverviewViewModelFactory : IProgramOverviewViewModelFactory
         return new ProgramOverviewViewModel(program, programsService, pointsService);
     }
 }
+

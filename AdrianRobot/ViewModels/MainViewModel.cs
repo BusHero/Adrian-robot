@@ -35,15 +35,17 @@ public class MainViewModel : ViewModelBase
 
     private IProgramsService ProgramsService { get; }
     private IProgramOverviewViewModelFactory ProgramOverviewViewModelFactory { get; }
+    private IProgramsViewModelFactory ProgramsViewModelFactory { get; }
 
     #endregion
 
     public MainViewModel(IProgramsService programsService,
-        IProgramOverviewViewModelFactory programOverviewViewModelFactory)
+        IProgramOverviewViewModelFactory programOverviewViewModelFactory, IProgramsViewModelFactory programsViewModelFactory)
     {
         ProgramsService = programsService ?? throw new ArgumentNullException(nameof(programsService));
         ProgramOverviewViewModelFactory = programOverviewViewModelFactory ?? throw new ArgumentNullException(nameof(programOverviewViewModelFactory));
         AddProgramCommand = Commands.NewCommand(CreateNewProgram);
+        ProgramsViewModelFactory = programsViewModelFactory ?? throw new ArgumentNullException(nameof(programOverviewViewModelFactory));
 
         settingsViewModel = new SettingsViewModel();
         Programs = programsService.GetAllPrograms() switch
@@ -94,7 +96,7 @@ public class MainViewModel : ViewModelBase
 
     private ProgramViewModel CreateProgramViewModel(Program program)
     {
-        var programViewModel = new ProgramViewModel(ProgramsService, program);
+        var programViewModel = ProgramsViewModelFactory.CreateProgramViewModel(program);
 
         programViewModel.SubscribePropertyChanged(nameof(programViewModel.IsSelected), UpdateSelectedProperties);
         programViewModel.SubscribePropertyChanged(nameof(programViewModel.IsDeleted), DeleteProgramViewModel);

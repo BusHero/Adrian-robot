@@ -11,7 +11,7 @@ public class MainViewModelTests
     {
         var config = new Config(Array.Empty<string>());
 
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
         
         mainViewModel.Programs.Should().BeEmpty();
     }
@@ -21,7 +21,7 @@ public class MainViewModelTests
     {
         var newName = "Awesome new name";
         var config = new Config();
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
         
         config.ProgramsService.ProgramNameUpdatedEvent += Raise.EventWith(new ProgramNameUpdatedEventArgs(config.Programs[0].Id, newName));
 
@@ -32,7 +32,7 @@ public class MainViewModelTests
     public void ProgramsComesFromTheProgramsService()
     {
         var config = new Config();
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
         mainViewModel.Programs
             .Select(program => program.Name)
             .Should()
@@ -44,7 +44,7 @@ public class MainViewModelTests
     {
         var config = new Config();
         
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
 
         mainViewModel.Programs[0].IsSelected.Should().Be(true);
         mainViewModel.Selected.Should()
@@ -56,7 +56,7 @@ public class MainViewModelTests
     {
         var config = new Config();
 
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
         mainViewModel.Programs[1].IsSelected = true;
 
         mainViewModel.Programs
@@ -74,7 +74,7 @@ public class MainViewModelTests
         var config = new Config();
         var foo = config.ProgramNames.Select((name, i) => (i == 0, name)).ToList();
 
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory);
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory);
 
         mainViewModel.CreateNewProgram();
 
@@ -90,7 +90,7 @@ public class MainViewModelTests
     {
         var config = new Config();
 
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory)
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory)
         {
             IsSettingsSelected = true
         };
@@ -105,7 +105,7 @@ public class MainViewModelTests
     {
         var config = new Config();
 
-        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory)
+        var mainViewModel = new MainViewModel(config.ProgramsService, config.ProgramOverivewViewModelFactory, config.ProgramsViewModelFactory)
         {
             IsSettingsSelected = true
         };
@@ -126,23 +126,26 @@ public class Config
         Programs = SetupPrograms(ProgramNames);
         PointsService = SetupPointsService();
         ProgramsService = SetupProgramService(Programs);
-        ProgramOverivewViewModelFactory = SetupProgramOverviewViewModelFactory(Programs);
+        ProgramOverivewViewModelFactory = SetupProgramOverviewViewModelFactory(PointsService, Programs);
+        ProgramsViewModelFactory = SetupProgramsViewModelFactory(ProgramsService);
     }
 
-    private ImmutableList<string> SetupProgramNames(IEnumerable<string> programs) => programs.ToImmutableList();
+    private static IProgramsViewModelFactory SetupProgramsViewModelFactory(IProgramsService programsService) => new ProgramViewModelFactory(programsService);
 
-    private ImmutableList<Program> SetupPrograms(IEnumerable<string> programs) => programs
+    private static ImmutableList<string> SetupProgramNames(IEnumerable<string> programs) => programs.ToImmutableList();
+
+    private static ImmutableList<Program> SetupPrograms(IEnumerable<string> programs) => programs
         .Select(programName => new Program(new (), programName, 0, Array.Empty<Point>()))
         .ToImmutableList();
 
-    private IPointsService SetupPointsService()
+    private static IPointsService SetupPointsService()
     {
         var pointsService = Substitute.For<IPointsService>();
         pointsService.GetPoints().Returns(ImmutableList.Create<Point>());
         return pointsService;
     }
 
-    private IProgramsService SetupProgramService(IEnumerable<Program> programs)
+    private static IProgramsService SetupProgramService(IEnumerable<Program> programs)
     {
         var programsService = Substitute.For<IProgramsService>();
         programsService.GetAllPrograms().Returns(programs);
@@ -151,7 +154,7 @@ public class Config
         return programsService;
     }
 
-    private IProgramOverviewViewModelFactory SetupProgramOverviewViewModelFactory(IEnumerable<Program> programs)
+    private static IProgramOverviewViewModelFactory SetupProgramOverviewViewModelFactory(IPointsService pointsService, IEnumerable<Program> programs)
     {
         var factory =  Substitute.For<IProgramOverviewViewModelFactory>();
         foreach (var program in programs)
@@ -159,7 +162,7 @@ public class Config
             var programOverview = new ProgramOverviewViewModel(
                     program,
                     Substitute.For<IProgramsService>(),
-                    PointsService);
+                    pointsService);
             factory.CreateProgramOverviewViewModel(program).Returns(programOverview);
         }
         return factory;
@@ -172,4 +175,5 @@ public class Config
     public IProgramsService ProgramsService { get; }
     public IPointsService PointsService { get; }
     public IProgramOverviewViewModelFactory ProgramOverivewViewModelFactory { get; }
+    public IProgramsViewModelFactory ProgramsViewModelFactory { get; }
 }
