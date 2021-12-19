@@ -16,36 +16,42 @@
                              Text="{Binding Text}" AcceptsReturn="True" IsReadOnly="True"
                              Style="{StaticResource AwesomeTextBox}"></TextBox>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" >
-                    <Viewbox Width="24" Height="24" Margin="0,0,8,0" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Uniform">
-                        <Canvas Name="svg836" Width="21" Height="24">
-                            <Canvas.RenderTransform>
-                                <TranslateTransform X="0" Y="0"/>
-                            </Canvas.RenderTransform>
-                            <Canvas.Resources/>
-                            <!--Unknown tag: sodipodi:namedview-->
-                            <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="Icon_awesomecopy" Fill="#FF392222">
-                                <Path.Data>
-                                    <PathGeometry Figures="M15 21v1.875A1.125 1.125 0 0 1 13.875 24H1.125A1.125 1.125 0 0 1 0 22.875V5.625A1.125 1.125 0 0 1 1.125 4.5H4.5V18.375A2.628 2.628 0 0 0 7.125 21ZM15 4.875V0H7.125A1.125 1.125 0 0 0 6 1.125v17.25A1.125 1.125 0 0 0 7.125 19.5h12.75A1.125 1.125 0 0 0 21 18.375V6H16.125A1.128 1.128 0 0 1 15 4.875Zm5.671-1.454L17.579.329a1.125 1.125 0 0 0-.8-.329H16.5V4.5H21V4.216a1.125 1.125 0 0 0-.329-.8Z" FillRule="NonZero"/>
-                                </Path.Data>
-                            </Path>
-                        </Canvas>
-                    </Viewbox>
-                    <Viewbox Width="24" Height="24" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Uniform">
-                        <Canvas Name="svg3" Width="21" Height="21">
-                            <Canvas.RenderTransform>
-                                <TranslateTransform X="0" Y="0"/>
-                            </Canvas.RenderTransform>
-                            <Canvas.Resources/>
-                            <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="Icon_materialclear" Fill="#FF392222">
-                                <Path.Data>
-                                    <PathGeometry Figures="M28.5 9.615 26.385 7.5 18 15.885 9.615 7.5 7.5 9.615 15.885 18 7.5 26.385 9.615 28.5 18 20.115 26.385 28.5 28.5 26.385 20.115 18Z" FillRule="NonZero"/>
-                                </Path.Data>
-                                <Path.RenderTransform>
-                                    <TranslateTransform X="-7.5" Y="-7.5"/>
-                                </Path.RenderTransform>
-                            </Path>
-                        </Canvas>
-                    </Viewbox>
+                    <Border Width="24" Height="24" Margin="0,0,8,0" >
+                        <Viewbox Stretch="Uniform">
+                            <Canvas Name="svg836" Width="21" Height="24">
+                                <Canvas.RenderTransform>
+                                    <TranslateTransform X="0" Y="0"/>
+                                </Canvas.RenderTransform>
+                                <Path Name="Icon_awesomecopy" Fill="{StaticResource Black-Color}">
+                                    <Path.Data>
+                                        <PathGeometry Figures="M15 21v1.875A1.125 1.125 0 0 1 13.875 24H1.125A1.125 1.125 0 0 1 0 22.875V5.625A1.125 1.125 0 0 1 1.125 4.5H4.5V18.375A2.628 2.628 0 0 0 7.125 21ZM15 4.875V0H7.125A1.125 1.125 0 0 0 6 1.125v17.25A1.125 1.125 0 0 0 7.125 19.5h12.75A1.125 1.125 0 0 0 21 18.375V6H16.125A1.128 1.128 0 0 1 15 4.875Zm5.671-1.454L17.579.329a1.125 1.125 0 0 0-.8-.329H16.5V4.5H21V4.216a1.125 1.125 0 0 0-.329-.8Z" FillRule="NonZero"/>
+                                    </Path.Data>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                    </Border>
+                    <Border Width="24" Height="24" >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDown">
+                                <i:InvokeCommandAction Command="{Binding ClearConsoleCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <Viewbox Stretch="Uniform">
+                            <Canvas Name="svg3" Width="21" Height="21">
+                                <Canvas.RenderTransform>
+                                    <TranslateTransform X="0" Y="0"/>
+                                </Canvas.RenderTransform>
+                                <Path Name="Icon_materialclear" Fill="{StaticResource Black-Color}">
+                                    <Path.Data>
+                                        <PathGeometry Figures="M28.5 9.615 26.385 7.5 18 15.885 9.615 7.5 7.5 9.615 15.885 18 7.5 26.385 9.615 28.5 18 20.115 26.385 28.5 28.5 26.385 20.115 18Z" FillRule="NonZero"/>
+                                    </Path.Data>
+                                    <Path.RenderTransform>
+                                        <TranslateTransform X="-7.5" Y="-7.5"/>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                    </Border>
 
                 </StackPanel>
             </Grid>

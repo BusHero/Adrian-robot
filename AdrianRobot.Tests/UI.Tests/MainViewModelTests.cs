@@ -163,7 +163,7 @@ public class Config
             var programOverview = new ProgramOverviewViewModel(
                     program,
                     Substitute.For<IProgramsService>(),
-                    pointsService);
+                    pointsService, Substitute.For<IProgramsExecutionService>());
             factory.CreateProgramOverviewViewModel(program).Returns(programOverview);
         }
         return factory;

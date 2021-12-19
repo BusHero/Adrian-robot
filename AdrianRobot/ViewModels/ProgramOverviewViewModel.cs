@@ -19,6 +19,7 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
 
     private IProgramsService ProgramsService { get; }
     private IPointsService PointsService { get; }
+    private IProgramsExecutionService ProgramsExecutionService { get; }
 
     #endregion
 
@@ -36,15 +37,18 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
     public bool ArePossiblePointsShown { get => arePossiblePointsShown; set => Set(ref arePossiblePointsShown, value); }
 
     public ICommand ShowPossiblePointsCommand { get; }
+    public ICommand ExecuteCommand { get; }
 
     #endregion
 
     public ProgramOverviewViewModel(Program program,
         IProgramsService programsService,
-        IPointsService pointsService)
+        IPointsService pointsService, 
+        IProgramsExecutionService programsExecutionService)
     {
         ProgramsService = programsService ?? throw new ArgumentNullException(nameof(programsService));
         PointsService = pointsService ?? throw new ArgumentNullException(nameof(pointsService));
+        ProgramsExecutionService = programsExecutionService ?? throw new ArgumentNullException(nameof(programsExecutionService));
         Program = program ?? throw new ArgumentNullException(nameof(program));
 
         Points = Program.Points.Select(ToPointViewModel).ToObservableCollection();
@@ -52,6 +56,7 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
         Repeats = Program.Repeats;
         PossiblePoints = PointsService.GetPoints().Select(ToPossiblePointViewModel).ToObservableCollection();
         ShowPossiblePointsCommand = Commands.NewCommand(() => ArePossiblePointsShown = true);
+        ExecuteCommand = Commands.NewCommand(HandleExecuteCommand);
 
         SubscribePropertyChanged(nameof(Repeats), @this => UpdateRepeats(@this.Repeats));
         SubscribePropertyChanged(nameof(Name), @this => UpdateName(@this.Name));
@@ -76,6 +81,11 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
     #endregion
 
     #region Private Methods
+
+    private async void HandleExecuteCommand(object? _)
+    {
+        await ProgramsExecutionService.ExecuteProgramAsync(Program.Id);
+    }
 
     private PossiblePointViewModel ToPossiblePointViewModel(Point point)
     {

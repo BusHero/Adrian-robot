@@ -8,7 +8,6 @@ namespace AdrianRobot
 
         event EventHandler<CommandExecutedEventArgs>? CommandExecutedEvent;
 
-        void ExecuteProgram(Program program);
         Task ExecuteProgramAsync(ProgramId id);
     }
 }
