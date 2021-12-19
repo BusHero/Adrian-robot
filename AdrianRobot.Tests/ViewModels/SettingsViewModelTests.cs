@@ -1,5 +1,5 @@
 ﻿using System.Collections.Immutable;
-using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace AdrianRobot.Tests;
 
@@ -14,7 +14,8 @@ public class SettingsViewModelTests
         var settingsViewModel = new SettingsViewModel(pointsService);
 
         settingsViewModel.Motor1Speed.Should().Be(0);
-        settingsViewModel.Motor1Speed.Should().Be(0);
+        settingsViewModel.Motor2Speed.Should().Be(0);
+        settingsViewModel.Points.Should().BeEmpty();
     }
 
     [Fact]
@@ -32,5 +33,19 @@ public class SettingsViewModelTests
         settingsViewModel.Points
             .Select(viewModel => viewModel.Point)
             .Should().BeEquivalentTo(points);
+    }
+
+    [Fact]
+    public void CreatePointCommand()
+    {
+        var pointsService = Substitute.For<IPointsService>();
+        pointsService.GetPoints().Returns(ImmutableList.Create<Point>());
+
+        var settingsViewModel = new SettingsViewModel(pointsService);
+
+        ICommand createPointCommand = settingsViewModel.AddPointCommand;
+        createPointCommand.Execute(default);
+
+        pointsService.Received().CreatePoint();
     }
 }

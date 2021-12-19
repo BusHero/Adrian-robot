@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace AdrianRobot;
 
@@ -22,6 +23,8 @@ public class SettingsViewModel : ViewModelBase<SettingsViewModel>
     {
         PointsService = pointsService ?? throw new ArgumentNullException(nameof(pointsService));
 
+        AddPointCommand = Commands.NewCommand(() => PointsService.CreatePoint());
+
         Points = PointsService
             .GetPoints()
             .Select(point => new SettingsPointViewModel(point))
@@ -35,6 +38,7 @@ public class SettingsViewModel : ViewModelBase<SettingsViewModel>
     public int Motor2Speed { get => motor2Speed; set => Set(ref motor2Speed, value); }
     
     public ObservableCollection<SettingsPointViewModel> Points { get; set; }
+    public ICommand AddPointCommand { get; }
 
     #endregion
 }
