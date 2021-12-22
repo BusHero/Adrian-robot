@@ -5,14 +5,6 @@ namespace AdrianRobot;
 
 public class SettingsViewModel : ViewModelBase<SettingsViewModel>
 {
-    #region Private Fields
-
-    private int motor1Speed;
-    
-    private int motor2Speed;
-
-    #endregion
-
     #region Services
 
     private IPointsService PointsService { get; }
@@ -28,7 +20,7 @@ public class SettingsViewModel : ViewModelBase<SettingsViewModel>
 
         Points = PointsService
             .GetPoints()
-            .Select(point => new SettingsPointViewModel(point))
+            .Select(point => new SettingsPointViewModel(point, PointsService))
             .ToObservableCollection();
 
         Motor1Speed = SettingsRepository.Motor1Speed;
@@ -61,12 +53,48 @@ public class SettingsViewModel : ViewModelBase<SettingsViewModel>
     #endregion
 }
 
-public class SettingsPointViewModel
+public class SettingsPointViewModel : ViewModelBase<PointViewModel>
 {
-    public SettingsPointViewModel(Point point)
+    private readonly IPointsService pointsService;
+    
+    public SettingsPointViewModel(Point point, IPointsService pointsService)
     {
         Point = point ?? throw new ArgumentNullException(nameof(point));
+        this.pointsService = pointsService ?? throw new ArgumentNullException(nameof(pointsService));
     }
 
     public Point Point { get; }
+
+    public string Name
+    {
+        get => Point.Name;
+        set
+        {
+            Point.Name = value;
+            pointsService.UpdatePointName(Point.Id, value);
+            FirePropertyChangedEvent(nameof(Name));
+        }
+    }
+    
+    public int MotorYPosition
+    {
+        get => Point.MotorYPosition;
+        set
+        {
+            Point.MotorYPosition = value;
+            pointsService.UpdateMotorYPosition(Point.Id, value);
+            FirePropertyChangedEvent(nameof(MotorYPosition));
+        }
+    }
+
+    public int MotorZPosition
+    {
+        get => Point.MotorZPosition;
+        set
+        {
+            Point.MotorZPosition = value;
+            pointsService.UpdateMotorZPosition(Point.Id, value);
+            FirePropertyChangedEvent(nameof(MotorZPosition));
+        }
+    }
 }

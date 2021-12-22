@@ -94,7 +94,7 @@ public class ProgramsServiceTests
     [Fact]
     public void AddPoint()
     {
-        var pointsService = new PointsService(new InMemoryPointRepository());
+        var pointsService = new PointsService(new InMemoryPointsRepository());
         var point = pointsService.CreatePoint();
         var program = new Program(new(), "first", 0, Array.Empty<Point>());
         var programsRepository = new InMemoryProgramsRepository(program);
@@ -112,7 +112,7 @@ public class ProgramsServiceTests
     public void RemovePoint()
     {
         var point = new Point(new(), "point", 10, 10);
-        var pointsService = new PointsService(new InMemoryPointRepository(point));
+        var pointsService = new PointsService(new InMemoryPointsRepository(point));
         var program = new Program(new(), "first", 0, new[] { point });
         var programPointId = program.Points[0].Id;
         var programsRepository = new InMemoryProgramsRepository(program);
@@ -130,7 +130,7 @@ public class ProgramsServiceTests
     public void UpdatePointWait()
     {
         var point = new Point(new(), "point", 10, 10);
-        var pointsService = new PointsService(new InMemoryPointRepository(point));
+        var pointsService = new PointsService(new InMemoryPointsRepository(point));
         var program = new Program(new(), "first", 0, new[] { point });
         var programPointId = program.Points[0].Id;
         var programsRepository = new InMemoryProgramsRepository(program);
@@ -148,7 +148,7 @@ public class ProgramsServiceTests
     public void UpdatePointShake()
     {
         var point = new Point(new(), "point", 10, 10);
-        var pointsService = new PointsService(new InMemoryPointRepository(point));
+        var pointsService = new PointsService(new InMemoryPointsRepository(point));
         var program = new Program(new(), "first", 0, new[] { point });
         var programPointId = program.Points[0].Id;
         var programsRepository = new InMemoryProgramsRepository(program);

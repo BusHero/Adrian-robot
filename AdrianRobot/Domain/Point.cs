@@ -12,9 +12,9 @@ public class Point
 
     public PointId Id { get; }
 
-    public string Name { get; }
+    public string Name { get; set; }
 
-    public int MotorYPosition { get; }
+    public int MotorYPosition { get; set; }
 
-    public int MotorZPosition { get; }
+    public int MotorZPosition { get; set; }
 }

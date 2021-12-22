@@ -1,5 +1,7 @@
 ﻿using System.Collections.Immutable;
 
+using AdrianRobot.Domain;
+
 namespace AdrianRobot.Tests;
 
 public class PointServiceTests
@@ -11,7 +13,7 @@ public class PointServiceTests
         const int MotorYPosition = 0;
         const int MotorZPosition = 0;
         var point = new Point(new PointId(), pointName, MotorYPosition, MotorZPosition);
-        var repository = new InMemoryPointRepository(point);
+        var repository = new InMemoryPointsRepository(point);
         var pointService = new PointsService(repository);
 
         ImmutableList<Point> points = pointService.GetPoints();
@@ -23,7 +25,7 @@ public class PointServiceTests
     [Fact]
     public void CreatePoint()
     {
-        var repository = new InMemoryPointRepository();
+        var repository = new InMemoryPointsRepository();
         var pointService = new PointsService(repository);
 
         CheckPoint(pointService.CreatePoint(), "Point", 0, 0);
@@ -32,37 +34,42 @@ public class PointServiceTests
         CheckPoint(pointService.GetPoints()[0], "Point", 0, 0);
     }
 
+    [Fact]
+    public void RemovePoint()
+    {
+        var repository = new InMemoryPointsRepository();
+        repository.SavePoint(new(new(), "asd", 10, 10));
+
+        IPointsService pointService = new PointsService(repository);
+        var id = repository.GetAllPoints()[0].Id;
+
+        pointService.RemovePoint(id);
+
+        _ = repository.GetPoint(id).Should().Be(Option.None<Point>());
+    }
+
+    [Fact]
+    public void UpdatePointName()
+    {
+        var repository = new InMemoryPointsRepository();
+        repository.SavePoint(new(new(), "asd", 10, 10));
+        var id = repository.GetAllPoints()[0].Id;
+
+        IPointsService pointService = new PointsService(repository);
+
+        pointService.UpdatePointName(pointID: id, pointName: "New name");
+        pointService.UpdateMotorYPosition(pointID: id, motor1Position: 12);
+        pointService.UpdateMotorZPosition(pointID: id, motor2Position: 13);
+
+        _ = repository.GetPoint(id).Select(point => point.Name).Should().Be("New name".ToOption());
+        _ = repository.GetPoint(id).Select(point => point.MotorYPosition).Should().Be(12.ToOption());
+        _ = repository.GetPoint(id).Select(point => point.MotorZPosition).Should().Be(13.ToOption());
+    }
+
     private static void CheckPoint(Point point, string name, int motorYPosition, int motorZPosition)
     {
-        point.Name.Should().Be(name);
-        point.MotorYPosition.Should().Be(motorYPosition);
-        point.MotorZPosition.Should().Be(motorZPosition);
-    }
-}
-
-public class InMemoryPointRepository : IPointsRepository
-{
-    private readonly Dictionary<PointId, Point> points;
-
-    public InMemoryPointRepository(IEnumerable<Point> points) => this.points = points
-        .ToDictionary(point => point.Id);
-
-    public InMemoryPointRepository(params Point[] points): this(points.AsEnumerable()) { }
-
-    public InMemoryPointRepository() : this(Array.Empty<Point>()) { }
-
-    public ImmutableList<Point> GetAllPoints() => points.Values.ToImmutableList();
-
-    public Option<Point> GetPoint(PointId point) => points.TryGetValue(point, out var pointValue) switch
-    {
-        true => pointValue.ToOption(),
-        _ => Option.None<Point>()
-    };
-
-    public void SavePoint(Point point)
-    {
-        ArgumentNullException.ThrowIfNull(point);
-
-        points[point.Id] = point;
+        _ = point.Name.Should().Be(name);
+        _ = point.MotorYPosition.Should().Be(motorYPosition);
+        _ = point.MotorZPosition.Should().Be(motorZPosition);
     }
 }

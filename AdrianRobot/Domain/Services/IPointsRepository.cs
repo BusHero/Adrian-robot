@@ -4,9 +4,11 @@ namespace AdrianRobot;
 
 public interface IPointsRepository
 {
-    public void SavePoint(Point point);
+    void SavePoint(Point point);
 
-    public Option<Point> GetPoint(PointId point);
+    Option<Point> GetPoint(PointId point);
+
+    bool RemovePoint(PointId pointId);
 
     ImmutableList<Point> GetAllPoints();
 }

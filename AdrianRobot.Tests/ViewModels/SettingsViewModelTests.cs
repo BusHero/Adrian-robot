@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.Windows.Input;
 
+using AdrianRobot.Domain;
+
 namespace AdrianRobot.Tests;
 
 public class SettingsViewModelTests
@@ -86,6 +88,21 @@ public class SettingsViewModelTests
     [Fact]
     public void UpdatePoint()
     {
+        var repository = new InMemoryPointsRepository();
+        Point point = new(new(), "first", 10, 100);
+        repository.SavePoint(point);
+
+        var pointsService = new PointsService(repository);
+        var settingsViewModel = new SettingsViewModel(pointsService, Substitute.For<ISettingsRepository>());
+        settingsViewModel.Points[0].Name = "asd";
+        settingsViewModel.Points[0].MotorYPosition = 123;
+        settingsViewModel.Points[0].MotorZPosition = 321;
+
+        repository.GetPoint(point.Id).Select(point => point.Name).Should().Be("asd".ToOption());
+        repository.GetPoint(point.Id).Select(point => point.MotorYPosition).Should().Be(123.ToOption());
+        repository.GetPoint(point.Id).Select(point => point.MotorZPosition).Should().Be(321.ToOption());
+
+        
 
     }
 }

@@ -27,4 +27,6 @@ public class InMemoryPointsRepository : IPointsRepository
 
         points[point.Id] = point;
     }
+
+    public bool RemovePoint(PointId pointId) => points.Remove(pointId);
 }
