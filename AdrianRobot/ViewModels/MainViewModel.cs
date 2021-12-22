@@ -44,7 +44,9 @@ public class MainViewModel : ViewModelBase
     public MainViewModel(
         IProgramsService programsService,
         IPointsService pointsService,
-        IProgramsExecutionService programsExecutionService, IProgramOverviewViewModelFactory programOverviewViewModelFactory, IProgramsViewModelFactory programsViewModelFactory)
+        IProgramsExecutionService programsExecutionService,
+        IProgramOverviewViewModelFactory programOverviewViewModelFactory,
+        IProgramsViewModelFactory programsViewModelFactory, ISettingsRepository settingsRepository)
     {
         ProgramsService = programsService ?? throw new ArgumentNullException(nameof(programsService));
         ProgramOverviewViewModelFactory = programOverviewViewModelFactory ?? throw new ArgumentNullException(nameof(programOverviewViewModelFactory));
@@ -52,7 +54,7 @@ public class MainViewModel : ViewModelBase
         ProgramsViewModelFactory = programsViewModelFactory ?? throw new ArgumentNullException(nameof(programOverviewViewModelFactory));
 
         ConsoleViewModel = new ConsoleViewModel(programsExecutionService);
-        settingsViewModel = new SettingsViewModel(pointsService);
+        settingsViewModel = new SettingsViewModel(pointsService, settingsRepository);
         Programs = programsService.GetAllPrograms() switch
         {
             { Count: > 0 } programs => programs.Select(CreateProgramViewModel).ToObservableCollection(),
