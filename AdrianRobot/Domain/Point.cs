@@ -2,6 +2,8 @@
 
 public class Point
 {
+    public static readonly Point Empty = new(PointId.Empty, "", 0, 0);
+
     public Point(PointId id, string name, int motorYPosition, int motorZPosition)
     {
         Id = id ?? throw new ArgumentNullException(nameof(id));

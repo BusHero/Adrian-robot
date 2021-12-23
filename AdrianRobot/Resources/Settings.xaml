@@ -2,6 +2,28 @@
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     xmlns:local="clr-namespace:AdrianRobot" 
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DataTemplate DataType="{x:Type local:SettingsPointViewModel}">
+        <Border Name="Border" Background="Transparent">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="A" Width="auto"/>
+                    <ColumnDefinition SharedSizeGroup="B" Width="auto"/>
+                    <ColumnDefinition SharedSizeGroup="C" Width="auto"/>
+                    <ColumnDefinition SharedSizeGroup="D" Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Button Style="{StaticResource Button.Close}" Width="24" Height="24" Command="{Binding RemoveCommand}" Content="Delete" HorizontalAlignment="Left" Margin="8"/>
+                <TextBlock Style="{StaticResource Body}" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Name}" Padding="8"/>
+                <TextBox Style="{StaticResource AwesomeTextBox}" Grid.Column="2" VerticalAlignment="Center" Text="{Binding MotorYPosition}" Padding="8"/>
+                <TextBox Style="{StaticResource AwesomeTextBox}" Grid.Column="3" VerticalAlignment="Center" Text="{Binding MotorZPosition}" Padding="8"/>
+            </Grid>
+        </Border>
+        <DataTemplate.Triggers>
+            <Trigger SourceName="Border" Property="IsMouseOver" Value="true">
+                <Setter TargetName="Border" Property="Background" Value="{StaticResource Background-Brush}"/>
+                <Setter TargetName="Border" Property="Effect" Value="{StaticResource Shadow-315}"/>
+            </Trigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type local:SettingsViewModel}">
         <DockPanel >
             <Border Margin="15" DockPanel.Dock="Top" Grid.Column="1" VerticalAlignment="Top" >
@@ -21,6 +43,37 @@
                         <HeaderedContentControl.Header>
                             <TextBlock DockPanel.Dock="Top" Style="{StaticResource Heading2}" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Define Points"/>
                         </HeaderedContentControl.Header>
+                        <StackPanel Grid.IsSharedSizeScope="True" >
+                            <StackPanel x:Name="Items" Orientation="Vertical">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="A" Width="auto"/>
+                                        <ColumnDefinition SharedSizeGroup="B" Width="auto"/>
+                                        <ColumnDefinition SharedSizeGroup="C" Width="auto"/>
+                                        <ColumnDefinition SharedSizeGroup="D" Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Style="{StaticResource Table-Header}" Grid.Column="0" Text="Delete"/>
+                                    <TextBlock Style="{StaticResource Table-Header}" Grid.Column="1" Text="Point"/>
+                                    <TextBlock Style="{StaticResource Table-Header}" Grid.Column="2" Text="Motor Y Position"/>
+                                    <TextBlock Style="{StaticResource Table-Header}" Grid.Column="3" Text="Motor Z Position"/>
+                                </Grid>
+                                <Separator/>
+                                <ItemsControl ItemsSource="{Binding Points}"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Grid DockPanel.Dock="Bottom">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="A" Width="auto"/>
+                                        <ColumnDefinition SharedSizeGroup="B" Width="auto"/>
+                                        <ColumnDefinition SharedSizeGroup="C" Width="auto"/>
+                                        <ColumnDefinition SharedSizeGroup="D" Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="AddButton" HorizontalAlignment="Left"  Style="{StaticResource Body}" Padding="8" Grid.Column="1" Margin="0,8,0,0">
+                                        <Hyperlink Command="{Binding AddPointCommand}" Focusable="False">Add</Hyperlink>
+                                    </TextBlock>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
                     </HeaderedContentControl>
                 </Border>
                 <Border Style="{StaticResource PanelStyle}" Margin="20">

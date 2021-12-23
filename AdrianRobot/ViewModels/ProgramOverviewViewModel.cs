@@ -58,8 +58,8 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
         ShowPossiblePointsCommand = Commands.NewCommand(() => ArePossiblePointsShown = true);
         ExecuteCommand = Commands.NewCommand(HandleExecuteCommand);
 
-        SubscribePropertyChanged(nameof(Repeats), @this => UpdateRepeats(@this.Repeats));
-        SubscribePropertyChanged(nameof(Name), @this => UpdateName(@this.Name));
+        _ = SubscribePropertyChanged(nameof(Repeats), @this => UpdateRepeats(@this.Repeats));
+        _ = SubscribePropertyChanged(nameof(Name), @this => UpdateName(@this.Name));
     }
 
     #region Public Methods
@@ -82,16 +82,13 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
 
     #region Private Methods
 
-    private async void HandleExecuteCommand(object? _)
-    {
-        await ProgramsExecutionService.ExecuteProgramAsync(Program.Id);
-    }
+    private async void HandleExecuteCommand(object? _) => await ProgramsExecutionService.ExecuteProgramAsync(Program.Id);
 
     private PossiblePointViewModel ToPossiblePointViewModel(Point point)
     {
         var pointViewModel = new PossiblePointViewModel(point);
 
-        pointViewModel.SubscribePropertyChanged(nameof(pointViewModel.IsSelected), HandlePossiblePointSelected);
+        _ = pointViewModel.SubscribePropertyChanged(nameof(pointViewModel.IsSelected), HandlePossiblePointSelected);
 
         return pointViewModel;
     }
@@ -111,16 +108,15 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
 
     private PointViewModel ToPointViewModel(ProgramPoint point)
     {
-        var pointViewModel = new PointViewModel(point);
-        pointViewModel.SubscribePropertyChanged(nameof(pointViewModel.IsRemoved), @this => HandleRemovePoint(@this.Point));
+        var pointViewModel = new PointViewModel(Program.Id, point, ProgramsService, PointsService);
+        _ = pointViewModel.SubscribePropertyChanged(nameof(pointViewModel.IsRemoved), HandleRemovePoint);
         return pointViewModel;
     }
 
-    private void HandleRemovePoint(ProgramPoint point)
+    private void HandleRemovePoint(PointViewModel point)
     {
-        ProgramsService.RemovePoint(Program.Id, point.Id);
-        Points.Remove(Points.First(pointViewModel => pointViewModel.Point == point));
-        Program.RemovePoint(point.Id);
+        Program.RemovePoint(point.Point.Id);
+        _ = Points.Remove(point);
     }
 
     #endregion

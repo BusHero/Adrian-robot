@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace AdrianRobot;
+﻿namespace AdrianRobot;
 
 public class PointId : IEquatable<PointId?>
 {
+    public static readonly PointId Empty = new(Guid.Empty);
+
     public PointId(): this(Guid.NewGuid()) { }
 
     public PointId(Guid id) => Id = id;

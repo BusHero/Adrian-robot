@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 
+using AdrianRobot.Domain;
+
 namespace AdrianRobot;
 
 public class SettingsViewModel : ViewModelBase<SettingsViewModel>
@@ -16,17 +18,35 @@ public class SettingsViewModel : ViewModelBase<SettingsViewModel>
     {
         PointsService = pointsService ?? throw new ArgumentNullException(nameof(pointsService));
         SettingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
-        AddPointCommand = Commands.NewCommand(() => PointsService.CreatePoint());
+        AddPointCommand = Commands.NewCommand(HandleAddPointCommand);
 
         Points = PointsService
             .GetPoints()
-            .Select(point => new SettingsPointViewModel(point, PointsService))
+            .Select(CreateSettingsPointViewModel)
             .ToObservableCollection();
 
         Motor1Speed = SettingsRepository.Motor1Speed;
         Motor2Speed = SettingsRepository.Motor2Speed;
     }
 
+    public SettingsPointViewModel CreateSettingsPointViewModel(Point point)
+    {
+        var pointViewModel = new SettingsPointViewModel(point, PointsService);
+        pointViewModel.SubscribePropertyChanged(nameof(pointViewModel.IsRemoved), HandleRemovePoint);
+        return pointViewModel;
+    }
+
+    private void HandleAddPointCommand()
+    {
+        var point = PointsService.CreatePoint();
+        var pointViewModel = CreateSettingsPointViewModel(point);
+        Points.Add(pointViewModel);
+    }
+
+    private void HandleRemovePoint(SettingsPointViewModel point)
+    {
+        _ = Points.Remove(point);
+    }
     #region Public Fields
 
     public int Motor1Speed
@@ -51,50 +71,4 @@ public class SettingsViewModel : ViewModelBase<SettingsViewModel>
     public ICommand AddPointCommand { get; }
 
     #endregion
-}
-
-public class SettingsPointViewModel : ViewModelBase<PointViewModel>
-{
-    private readonly IPointsService pointsService;
-    
-    public SettingsPointViewModel(Point point, IPointsService pointsService)
-    {
-        Point = point ?? throw new ArgumentNullException(nameof(point));
-        this.pointsService = pointsService ?? throw new ArgumentNullException(nameof(pointsService));
-    }
-
-    public Point Point { get; }
-
-    public string Name
-    {
-        get => Point.Name;
-        set
-        {
-            Point.Name = value;
-            pointsService.UpdatePointName(Point.Id, value);
-            FirePropertyChangedEvent(nameof(Name));
-        }
-    }
-    
-    public int MotorYPosition
-    {
-        get => Point.MotorYPosition;
-        set
-        {
-            Point.MotorYPosition = value;
-            pointsService.UpdateMotorYPosition(Point.Id, value);
-            FirePropertyChangedEvent(nameof(MotorYPosition));
-        }
-    }
-
-    public int MotorZPosition
-    {
-        get => Point.MotorZPosition;
-        set
-        {
-            Point.MotorZPosition = value;
-            pointsService.UpdateMotorZPosition(Point.Id, value);
-            FirePropertyChangedEvent(nameof(MotorZPosition));
-        }
-    }
 }

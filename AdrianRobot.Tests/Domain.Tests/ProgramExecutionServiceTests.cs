@@ -9,9 +9,14 @@ public class ProgramExecutionServiceTests
     [Fact]
     public async Task Foo()
     {
-        var program = new Program(new(), "Program", 3, Arrays.Of<Point>(
-            new (new(), "Point 1", 100, 200),
-            new (new(), "Point 2", 10, 20)));
+        var points = Arrays.Of<Point>(
+            new(new(), "Point 1", 100, 200),
+            new(new(), "Point 2", 10, 20));
+        var pointsRepository = new InMemoryPointsRepository();
+        pointsRepository.SavePoint(points[0]);
+        pointsRepository.SavePoint(points[1]);
+
+        var program = new Program(new(), "Program", 3, points);
         program.UpdatePointWait(program.Points[0].Id, 10);
         program.UpdatePointShake(program.Points[0].Id, 0);
 
@@ -23,7 +28,7 @@ public class ProgramExecutionServiceTests
         
         repository.GetProgram(program.Id).Returns(program.ToOption());
         
-        var programExecutionService = new ProgramsExecutionService(repository);
+        var programExecutionService = new ProgramsExecutionService(repository, pointsRepository);
         var monitor = programExecutionService.Monitor();
 
         await programExecutionService.ExecuteProgramAsync(program.Id);

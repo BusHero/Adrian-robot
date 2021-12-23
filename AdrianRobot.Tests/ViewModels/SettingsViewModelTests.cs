@@ -40,13 +40,14 @@ public class SettingsViewModelTests
     [Fact]
     public void CreatePointCommand()
     {
+        var point = new Point(new(), "", 0, 0);
         var pointsService = Substitute.For<IPointsService>();
         pointsService.GetPoints().Returns(ImmutableList.Create<Point>());
+        pointsService.CreatePoint().Returns(point);
 
         var settingsViewModel = new SettingsViewModel(pointsService, Substitute.For<ISettingsRepository>());
 
-        ICommand createPointCommand = settingsViewModel.AddPointCommand;
-        createPointCommand.Execute(default);
+        settingsViewModel.AddPointCommand.Execute(default);
 
         pointsService.Received().CreatePoint();
     }
@@ -63,8 +64,8 @@ public class SettingsViewModelTests
 
         var settingsViewModel = new SettingsViewModel(pointsService, settingsRepository);
 
-        settingsViewModel.Motor1Speed.Should().Be(10);
-        settingsViewModel.Motor2Speed.Should().Be(11);
+        _ = settingsViewModel.Motor1Speed.Should().Be(10);
+        _ = settingsViewModel.Motor2Speed.Should().Be(11);
     }
 
     [Fact]
@@ -73,7 +74,7 @@ public class SettingsViewModelTests
         var settingsRepository = new InMemorySettingsRepository();
 
         var pointsService = Substitute.For<IPointsService>();
-        pointsService.GetPoints().Returns(ImmutableList.Create<Point>());
+        _ = pointsService.GetPoints().Returns(ImmutableList.Create<Point>());
 
         var settingsViewModel = new SettingsViewModel(pointsService, settingsRepository)
         {
@@ -81,8 +82,8 @@ public class SettingsViewModelTests
             Motor2Speed = 11
         };
 
-        settingsRepository.Motor1Speed.Should().Be(10);
-        settingsRepository.Motor2Speed.Should().Be(11);
+        _ = settingsRepository.Motor1Speed.Should().Be(10);
+        _ = settingsRepository.Motor2Speed.Should().Be(11);
     }
 
     [Fact]
@@ -98,12 +99,9 @@ public class SettingsViewModelTests
         settingsViewModel.Points[0].MotorYPosition = 123;
         settingsViewModel.Points[0].MotorZPosition = 321;
 
-        repository.GetPoint(point.Id).Select(point => point.Name).Should().Be("asd".ToOption());
-        repository.GetPoint(point.Id).Select(point => point.MotorYPosition).Should().Be(123.ToOption());
-        repository.GetPoint(point.Id).Select(point => point.MotorZPosition).Should().Be(321.ToOption());
-
-        
-
+        _ = repository.GetPoint(point.Id).Select(point => point.Name).Should().Be("asd".ToOption());
+        _ = repository.GetPoint(point.Id).Select(point => point.MotorYPosition).Should().Be(123.ToOption());
+        _ = repository.GetPoint(point.Id).Select(point => point.MotorZPosition).Should().Be(321.ToOption());
     }
 }
 

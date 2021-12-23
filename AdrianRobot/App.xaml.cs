@@ -14,6 +14,7 @@ public partial class App : Application
         base.OnStartup(e);
 
         var serviceProvider = new ServiceCollection()
+            .AddSingleton<ISettingsRepository, InMemorySettingsRepository>()
             .AddSingleton<IProgramsExecutionService, ProgramsExecutionService>()
             .AddSingleton<IProgramsViewModelFactory, ProgramViewModelFactory>()
             .AddSingleton<IProgramOverviewViewModelFactory, ProgramOverviewViewModelFactory>()

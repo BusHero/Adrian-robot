@@ -59,17 +59,24 @@ public class ProgramOverviewViewModelTests
     [Fact]
     public void ProgramOverviewShowsPoints()
     {
+        var point1 = new Point(new PointId(), "Point 1", 100, 100);
+        var point2 = new Point(new PointId(), "Point", 100, 100);
         var program = new Program(
             new(),
             "Program name",
             30,
             new Point[] 
             { 
-                new (new PointId(), "Point 1", 100, 100), 
-                new (new PointId(), "Point", 100, 100)
+                point1, 
+                point2
             });
+        var pointsService = Substitute.For<IPointsService>();
+        pointsService.GetPoint(point1.Id).Returns(point1.ToOption());
+        pointsService.GetPoint(point2.Id).Returns(point2.ToOption());
+        pointsService.GetPoints().Returns(ImmutableList.Create<Point>(point1, point2));
+
         var sut = new ProgramOverviewViewModel(program,
-            DefaultProgramsService, DefaultPointsService, Substitute.For<IProgramsExecutionService>());
+            DefaultProgramsService, pointsService, Substitute.For<IProgramsExecutionService>());
 
         sut.Points
             .Select(point => point.Name)

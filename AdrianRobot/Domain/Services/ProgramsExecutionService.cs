@@ -4,11 +4,13 @@ namespace AdrianRobot;
 
 public class ProgramsExecutionService : IProgramsExecutionService
 {
-    public IProgramsRepository ProgramsRepository { get; }
+    private IProgramsRepository ProgramsRepository { get; }
+    private IPointsRepository PointsRepository { get; }
 
-    public ProgramsExecutionService(IProgramsRepository programsRepository)
+    public ProgramsExecutionService(IProgramsRepository programsRepository, IPointsRepository pointsRepository)
     {
         ProgramsRepository = programsRepository ?? throw new ArgumentNullException(nameof(programsRepository));
+        PointsRepository = pointsRepository ?? throw new ArgumentNullException(nameof(pointsRepository));
     }
 
     public async Task ExecuteProgramAsync(ProgramId id)
@@ -30,13 +32,15 @@ public class ProgramsExecutionService : IProgramsExecutionService
         {
             FireCommandExecutedEvent($"Start cycle {cycle} of {program.Repeats}");
 
-            foreach (var point in program.Points)
+            foreach (var programPoint in program.Points)
             {
+                var point = PointsRepository.GetPoint(programPoint.PointId).ValueOrDefault(Point.Empty);
+
                 FireCommandExecutedEvent($"Navigating to {point.Name}(y: {point.MotorYPosition}, z: {point.MotorZPosition})");
-                FireCommandExecutedEvent($"Waiting for {point.Wait} seconds");
-                if (point.Shake != 0)
+                FireCommandExecutedEvent($"Waiting for {programPoint.Wait} seconds");
+                if (programPoint.Shake != 0)
                 {
-                    FireCommandExecutedEvent($"Shaking for {point.Shake} seconds");
+                    FireCommandExecutedEvent($"Shaking for {programPoint.Shake} seconds");
                 }
             }
 

@@ -30,7 +30,7 @@ public class Program
 
     public void AddPoint(Point point, int wait, int shake)
     {
-        var programPoint = new ProgramPoint(new ProgramPointId(), point.Id, point.Name, point.MotorYPosition, point.MotorZPosition, wait, shake);
+        var programPoint = new ProgramPoint(new (), point.Id, wait, shake);
         points[programPoint.Id] = programPoint;
     }
 
