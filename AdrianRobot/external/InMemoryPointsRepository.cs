@@ -17,7 +17,7 @@ public class InMemoryPointsRepository : IPointsRepository
 
     public Option<Point> GetPoint(PointId point) => points.TryGetValue(point, out var pointValue) switch
     {
-        true => pointValue.ToOption(),
+        true => new Point(pointValue).ToOption(),
         _ => Option.None<Point>()
     };
 
@@ -25,7 +25,7 @@ public class InMemoryPointsRepository : IPointsRepository
     {
         ArgumentNullException.ThrowIfNull(point);
 
-        points[point.Id] = point;
+        points[point.Id] = new Point(point);
     }
 
     public bool RemovePoint(PointId pointId) => points.Remove(pointId);

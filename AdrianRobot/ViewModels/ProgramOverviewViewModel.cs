@@ -49,7 +49,7 @@ public class ProgramOverviewViewModel : ViewModelBase<ProgramOverviewViewModel>
         ProgramsService = programsService ?? throw new ArgumentNullException(nameof(programsService));
         PointsService = pointsService ?? throw new ArgumentNullException(nameof(pointsService));
         ProgramsExecutionService = programsExecutionService ?? throw new ArgumentNullException(nameof(programsExecutionService));
-        Program = program ?? throw new ArgumentNullException(nameof(program));
+        Program = ProgramsService.GetProgram(program.Id).ValueOrDefault(Program.Default);
 
         Points = Program.Points.Select(ToPointViewModel).ToObservableCollection();
         Name = Program.Name;

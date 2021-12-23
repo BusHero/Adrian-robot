@@ -98,8 +98,9 @@
         </Grid>
         <Border Style="{StaticResource LeftNavbar}" Grid.Column="0">
             <DockPanel>
-                <ToggleButton IsChecked="{Binding IsSettingsSelected}" Style="{StaticResource Settings-button}"
-                                VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                <ToggleButton IsChecked="{Binding IsSettingsSelected, Mode=TwoWay}"
+                              Style="{StaticResource Settings-button}"
+                              VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
                               Height="72" DockPanel.Dock="Bottom">
                     <Grid  Margin="16" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>

@@ -10,24 +10,27 @@ public class MainViewModel : ViewModelBase
     #region Fields
 
     private ViewModelBase? selected;
-    private ProgramViewModel? selectedProgram;
     private bool isSettingsSelected;
-
-    private SettingsViewModel settingsViewModel;
+    private readonly SettingsViewModel settingsViewModel;
 
     #endregion
 
     #region Properties
-    public string ConsoleText { get; set; } = "Start Program...\nNavigate to Point 1\nWait 5 seconds\nShake to seconds\nNavigate Point 2\nWait 2 seconds";
     public ObservableCollection<ProgramViewModel> Programs { get; }
 
     public ViewModelBase? Selected { get => selected; set => Set(ref selected, value); }
 
-    public ProgramViewModel? SelectedProgram { get => selectedProgram; set => Set(ref selectedProgram, value); }
 
     public ICommand AddProgramCommand { get; }
 
-    public bool IsSettingsSelected { get => isSettingsSelected; set => Set(ref isSettingsSelected, value); }
+    public bool IsSettingsSelected
+    {
+        get => isSettingsSelected; set
+        {
+            isSettingsSelected = value;
+            FirePropertyChangedEvent(nameof(IsSettingsSelected));
+        }
+    }
 
     public ViewModelBase ConsoleViewModel { get; }
 
@@ -61,13 +64,10 @@ public class MainViewModel : ViewModelBase
             _ => new ObservableCollection<ProgramViewModel>()
         };
 
-        if (Programs.Count == 0)
-            return;
+        if (Programs.Count != 0)
+            Programs[0].IsSelected = true;
 
-        Programs[0].IsSelected = true;
-
-        SubscribePropertyChanged(nameof(SelectedProgram), SelectedProgramChanged);
-        SubscribePropertyChanged(nameof(IsSettingsSelected), SelectSettingsView);
+        _ = SubscribePropertyChanged(nameof(IsSettingsSelected), SelectSettingsView);
     }
 
     #region Public Methdods
@@ -96,7 +96,6 @@ public class MainViewModel : ViewModelBase
             Programs[0].IsSelected = true;
         else
         {
-            SelectedProgram = default;
             Selected = default;
         }
     }
@@ -118,14 +117,7 @@ public class MainViewModel : ViewModelBase
 
         UnselectAllProgramsExcept(program);
         Selected = ProgramOverviewViewModelFactory.CreateProgramOverviewViewModel(program.Program);
-    }
-
-    private void SelectedProgramChanged()
-    {
-        if (SelectedProgram == null)
-            UnselectAllPrograms();
-        else
-            SelectedProgram.IsSelected = true;
+        IsSettingsSelected = false;
     }
 
     private void SelectSettingsView()

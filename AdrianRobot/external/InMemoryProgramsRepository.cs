@@ -27,11 +27,11 @@ public class InMemoryProgramsRepository : IProgramsRepository
 
     public Option<Program> GetProgram(ProgramId programId) => Programs.TryGetValue(programId, out var program) switch
     {
-        true => program.ToOption(),
+        true => new Program(program).ToOption(),
         false => Option.None<Program>()
     };
 
-    public void SaveProgram(Program program) => Programs[program.Id] = program;
+    public void SaveProgram(Program program) => Programs[program.Id] = new Program(program);
 
     public ImmutableList<Program> GetAllPrograms() => Programs
         .Values

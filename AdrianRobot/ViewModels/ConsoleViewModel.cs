@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 
 namespace AdrianRobot;
 
@@ -19,7 +20,8 @@ public class ConsoleViewModel: ViewModelBase<ConsoleViewModel>
     public ConsoleViewModel(IProgramsExecutionService programsExecutionService)
     {
         ProgramsExecutionService = programsExecutionService ?? throw new ArgumentNullException(nameof(programsExecutionService));
-        ClearConsoleCommand = Commands.NewCommand(() => Text = string.Empty);
+        ClearConsoleCommand = Commands.NewCommand(HandleClearConsoleCommand);
+        CopyToClipboardCommand = Commands.NewCommand(HandleCopyToClipboard);
 
         ProgramsExecutionService.CommandExecutedEvent += HandleCommandExecuted;
     }
@@ -32,7 +34,16 @@ public class ConsoleViewModel: ViewModelBase<ConsoleViewModel>
     #region Public Fieds
 
     public string Text { get => text; set => Set(ref text, value); }
-    public ICommand ClearConsoleCommand { get; set; }
+    public ICommand ClearConsoleCommand { get; }
+    public ICommand CopyToClipboardCommand { get; }
+
+    #endregion
+
+    #region Private Methods
+
+    private void HandleClearConsoleCommand() => Text = string.Empty;
+
+    private void HandleCopyToClipboard() => Clipboard.SetData(DataFormats.Text, Text);
 
     #endregion
 }

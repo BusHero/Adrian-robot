@@ -1,6 +1,6 @@
 ﻿namespace AdrianRobot;
 
-public class Point
+public class Point: ICloneable
 {
     public static readonly Point Empty = new(PointId.Empty, "", 0, 0);
 
@@ -12,6 +12,14 @@ public class Point
         MotorZPosition = motorZPosition;
     }
 
+    public Point(Point point)
+    {
+        Id = point.Id;
+        Name = point.Name;
+        MotorYPosition = point.MotorYPosition;
+        MotorZPosition = point.MotorZPosition;
+    }
+
     public PointId Id { get; }
 
     public string Name { get; set; }
@@ -19,4 +27,6 @@ public class Point
     public int MotorYPosition { get; set; }
 
     public int MotorZPosition { get; set; }
+
+    public object Clone() => new Point(Id, Name, MotorYPosition, MotorZPosition);
 }

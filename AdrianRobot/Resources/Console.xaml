@@ -10,6 +10,11 @@
                              Style="{StaticResource AwesomeTextBox}"></TextBox>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" >
                 <Border Width="24" Height="24" Margin="0,0,8,0" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown">
+                            <i:InvokeCommandAction Command="{Binding CopyToClipboardCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <Viewbox Stretch="Uniform">
                         <Canvas Name="svg836" Width="21" Height="24">
                             <Canvas.RenderTransform>

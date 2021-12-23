@@ -7,7 +7,7 @@ public static class ProgramRepositoryExtensions
         ArgumentNullException.ThrowIfNull(programsRepository);
         ArgumentNullException.ThrowIfNull(optionalProgram);
 
-        if (optionalProgram is Some<Program> someProgram)
-            programsRepository.SaveProgram(someProgram.Value);
+        if (optionalProgram is Some<Program> { Value: var program})
+            programsRepository.SaveProgram(program);
     }
 }

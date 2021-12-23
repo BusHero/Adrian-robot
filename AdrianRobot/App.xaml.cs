@@ -18,36 +18,16 @@ public partial class App : Application
             .AddSingleton<IProgramsExecutionService, ProgramsExecutionService>()
             .AddSingleton<IProgramsViewModelFactory, ProgramViewModelFactory>()
             .AddSingleton<IProgramOverviewViewModelFactory, ProgramOverviewViewModelFactory>()
-            .AddSingleton<IPointsRepository>(_ =>
-            {
-                var repository = new InMemoryPointsRepository();
-                repository.SavePoint(new(new(), "Point 1", 100, 200));
-                repository.SavePoint(new(new(), "Point 2", 150, 250));
-                return repository;
-            })
+            .AddSingleton<IPointsRepository>(_ => new InMemoryPointsRepository())
             .AddSingleton<IPointsService, PointsService>()
-            .AddSingleton((Func<IServiceProvider, IProgramsRepository>)(_ =>
-            {
-                var repository = new InMemoryProgramsRepository();
-                repository.SaveProgram(new (
-                    new(),
-                    "Program",
-                    10,
-                    Arrays.Of(
-                        new Point(new(), "Point 1", 10, 20),
-                        new Point(new(), "Point 2", 10, 30),
-                        new Point(new(), "Point 3", 10, 10))));
-                return repository;
-            }))
+            .AddSingleton<IProgramsRepository>(_ => new InMemoryProgramsRepository())
             .AddSingleton<IProgramsService, ProgramsService>()
             .AddSingleton<MainViewModel>()
-            .AddSingleton((Func<IServiceProvider, Window>)(services => new MainWindow
+            .AddSingleton<Window>(services => new MainWindow
             {
                 DataContext = services.GetRequiredService<MainViewModel>()
-            }))
+            })
             .BuildServiceProvider();
-
-        var mainViewModel = serviceProvider.GetRequiredService<MainViewModel>();
 
         MainWindow = serviceProvider.GetRequiredService<Window>();
         MainWindow.Show();

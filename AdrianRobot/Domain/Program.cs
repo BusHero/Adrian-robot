@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 
 namespace AdrianRobot.Domain;
 
-public class Program
+public class Program : ICloneable
 {
     public static Program Default { get; } = new Program(new(new Guid()), "", 0, Array.Empty<Point>());
 
@@ -21,6 +21,14 @@ public class Program
         this.points = points
             .Select(ProgramPoint.FromPoint)
             .ToDictionary(point => point.Id);
+    }
+
+    public Program(Program program)
+    {
+        Id = program.Id;
+        Name = program.Name;
+        Repeats = program.Repeats;
+        points = new Dictionary<ProgramPointId, ProgramPoint>(program.points);
     }
 
     public ProgramId Id { get; }
@@ -51,5 +59,7 @@ public class Program
 
         points[programPointId] = point with { Shake = shake };
     }
+
+    public object Clone() => new Program(this);
 }
 
